@@ -14,23 +14,29 @@ struct ChatMessage: Identifiable {
     let isOwn: Bool
 }
 
-func htmlToAttributed(_ html: String) -> AttributedString {
+func htmlToAttributed(_ html: String, color: Color = .primary) -> AttributedString {
     // TODO: customize styles
     let wrappedHtml = "<span style=\"font-family: -apple-system; font-size: 16px;\">\(html)</span>"
+
     guard let data = wrappedHtml.data(using: .utf8) else { return AttributedString("") }
 
-    if let nsAttr = try? NSAttributedString(
-        data: data,
-        options: [.documentType: NSAttributedString.DocumentType.html,
-                  .characterEncoding: String.Encoding.utf8.rawValue],
-        documentAttributes: nil
-    ) {
-        return AttributedString(nsAttr)
-    }
+        guard let nsAttr = try? NSMutableAttributedString(
+            data: data,
+            options: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ],
+            documentAttributes: nil
+        ) else { return AttributedString("") }
 
-    return AttributedString("")
+        // Apply color to the whole range
+        nsAttr.addAttribute(.foregroundColor, value: UIColor(color), range: NSRange(location: 0, length: nsAttr.length))
+
+        return AttributedString(nsAttr)
 }
 
 func makeChatMessage(nickname: String, body: String, isOwn: Bool) -> ChatMessage {
-    ChatMessage(nickname: nickname, body: htmlToAttributed(body), isOwn: isOwn)
+    let str = htmlToAttributed(body)
+    
+    return ChatMessage(nickname: nickname, body: str, isOwn: isOwn)
 }
