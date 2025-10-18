@@ -7,10 +7,33 @@
 
 import SwiftUI
 
+
 struct Message: Identifiable {
     let id = UUID()
     let nickname: String;
-    let body: String;
+    let body: AttributedString;
+}
+
+@MainActor
+func htmlToAttributed(_ html: String) -> AttributedString {
+    let wrappedHtml = "<span style=\"font-family: -apple-system; font-size: 16px;\">\(html)</span>"
+    guard let data = wrappedHtml.data(using: .utf8) else { return AttributedString("") }
+
+    if let nsAttr = try? NSAttributedString(
+        data: data,
+        options: [.documentType: NSAttributedString.DocumentType.html,
+                  .characterEncoding: String.Encoding.utf8.rawValue],
+        documentAttributes: nil
+    ) {
+        return AttributedString(nsAttr)
+    }
+
+    return AttributedString("")
+}
+
+@MainActor
+func makeMessage(nickname: String, body: String) -> Message {
+    Message(nickname: nickname, body: htmlToAttributed(body))
 }
 
 struct ContentView: View {
@@ -55,7 +78,22 @@ struct ContentView: View {
                         }
                     }
                 }
-            }.padding(.vertical)
+            }
+            .background(Color(UIColor.systemBackground))
+            .padding(.vertical)
+            .onChange(of: messages.count) {
+                // scroll to the newest item (which is "top" due to inversion, but visually bottom)
+                if let last = messages.last {
+                    withAnimation(.easeOut) {
+                        proxy.scrollTo(last.id, anchor: .top)
+                    }
+                }
+            }
+            .onAppear {
+                if let last = messages.last {
+                    proxy.scrollTo(last.id, anchor: .top)
+                }
+            }
         }
     }
     
@@ -65,7 +103,7 @@ struct ContentView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             Spacer()
             Button("Send", systemImage: "paperplane") {
-                let newMessage = Message(nickname: "me", body: draft)
+                let newMessage = makeMessage(nickname: "me", body: draft)
                 messages.append(newMessage)
                 draft = ""
             }.disabled(
@@ -84,13 +122,17 @@ struct ContentView: View {
     }
 }
 
+
+
 #Preview {
     let initialMessages = [
-        Message(nickname: "johndoe", body: "Hello, world!"),
-        Message(nickname: "alice", body: "Hey John 👋 How’s it going?"),
-        Message(nickname: "johndoe", body: "All good! Just testing this new chat UI 😎"),
-        Message(nickname: "alice", body: "Looks clean! Did you build it with SwiftUI?"),
-        Message(nickname: "johndoe", body: "Yep, and it works surprisingly well on the first try 🎉"),
+        makeMessage(nickname: "johndoe", body: "Hello, world!"),
+        makeMessage(nickname: "alice", body: "Hey John 👋 How’s it going?"),
+        makeMessage(nickname: "johndoe", body: "All good! Just testing this new chat UI 😎"),
+        makeMessage(nickname: "alice", body: "Looks clean! Did you build it with SwiftUI?"),
+        makeMessage(nickname: "johndoe", body: "Yep, and it works surprisingly well on the first try 🎉"),
+        makeMessage(nickname: "alice", body: "Does it support HTML markdown?"),
+        makeMessage(nickname: "johndoe", body: "Sure, <i>this</i> is italic and <b>this</b> is bold!"),
     ];
     
     return ContentView(initialMessages: initialMessages)
