@@ -22,6 +22,9 @@ struct ChatView: View {
             .onChange(of: vm.messages.count) {
                 scrollToLastMessage(proxy: proxy)
             }
+            .onAppear() {
+                scrollToLastMessage(proxy: proxy)
+            }
         }
     }
     
