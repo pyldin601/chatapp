@@ -8,12 +8,8 @@
 import SwiftUI
 
 struct ChatView: View {
-    @StateObject private var vm: ChatViewModel
-    
-    init(nickname: String) {
-        _vm = StateObject(wrappedValue: ChatViewModel(nickname: nickname))
-    }
-    
+    @ObservedObject var vm: ChatAppViewModel
+
     var messagesView: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -31,21 +27,21 @@ struct ChatView: View {
     
     var body: some View {
         VStack {
-            NavBarView()
             messagesView
             MessageInputView { vm.sendMessage($0) }
         }
         .padding()
-        .task { await vm.loadHistory() }
     }
     
     func scrollToLastMessage(proxy: ScrollViewProxy) {
-        if let last = vm.messages.last {
-            proxy.scrollTo(last.id, anchor: .top)
+        withAnimation(.spring()) {
+            if let last = vm.messages.last {
+                proxy.scrollTo(last.id, anchor: .top)
+            }
         }
     }
 }
 
 #Preview {
-    ChatView(nickname: "me")
+    ChatView(vm: ChatAppViewModel())
 }

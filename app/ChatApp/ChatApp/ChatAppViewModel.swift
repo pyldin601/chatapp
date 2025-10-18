@@ -9,26 +9,20 @@ import Combine
 import SwiftUI
 
 @Observable
-final class ChatViewModel: ObservableObject {
-    var nickname: String
+final class ChatAppViewModel: ObservableObject {
+    var nickname: String = ""
     var messages: [ChatMessage] = []
-    
-    init(nickname: String) {
-        _nickname = nickname
-    }
-    
+
     func sendMessage(_ text: String) {
         messages.append(makeChatMessage(nickname: nickname, body: text, isOwn: true))
         // TODO: Send to API
     }
     
-    func changeNickname(_ newNickname: String) {
+    func setNickname(_ newNickname: String) {
         nickname = newNickname
     }
     
     func loadHistory() async {
-        print("loading history...")
-        
         let loadedHistory = [
             makeChatMessage(nickname: "johndoe", body: "Hello, world!", isOwn: true),
             makeChatMessage(nickname: "alice", body: "Hey John 👋 How’s it going?", isOwn: false),
