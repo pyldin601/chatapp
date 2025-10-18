@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MessageRowView: View {
+struct MessageView: View {
     let message: ChatMessage
     
     var body: some View {
@@ -30,7 +30,7 @@ struct MessageRowView: View {
 
 #Preview {
     VStack {
-        MessageRowView(message: makeChatMessage(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false))
-        MessageRowView(message: makeChatMessage(nickname: "me", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true))
+        MessageView(message: makeChatMessage(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false))
+        MessageView(message: makeChatMessage(nickname: "me", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true))
     }
 }

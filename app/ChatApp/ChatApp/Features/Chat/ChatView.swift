@@ -14,7 +14,7 @@ struct ChatView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 10) {
-                    MessageListView(messages: vm.messages)
+                    EventListView(messages: vm.messages)
                 }
             }
             .background(Color(UIColor.systemBackground))
