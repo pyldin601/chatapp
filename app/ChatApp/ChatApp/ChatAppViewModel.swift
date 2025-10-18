@@ -10,7 +10,7 @@ import SwiftUI
 
 @Observable
 final class ChatAppViewModel: ObservableObject {
-    var nickname: String = ""
+    var nickname: String = UserDefaults.standard.string(forKey: "nickname") ?? ""
     var messages: [ChatMessage] = []
 
     func sendMessage(_ text: String) {
@@ -20,6 +20,7 @@ final class ChatAppViewModel: ObservableObject {
     
     func setNickname(_ newNickname: String) {
         nickname = newNickname
+        UserDefaults.standard.set(nickname, forKey: "nickname")
     }
     
     func loadHistory() async {
