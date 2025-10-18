@@ -15,6 +15,7 @@ struct Message: Identifiable {
 
 struct ContentView: View {
     @State private var messages: [Message]
+    @State private var draft: String = ""
     
     init(initialMessages: [Message]) {
         _messages = State(initialValue: initialMessages)
@@ -60,10 +61,16 @@ struct ContentView: View {
     
     var inputBar: some View {
         HStack {
-            TextField("Type a message", text: .constant(""))
+            TextField("Type a message", text: $draft)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             Spacer()
-            Button("Send", systemImage: "paperplane") {}.disabled(true)
+            Button("Send", systemImage: "paperplane") {
+                let newMessage = Message(nickname: "me", body: draft)
+                messages.append(newMessage)
+                draft = ""
+            }.disabled(
+                draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            )
         }
     }
     
