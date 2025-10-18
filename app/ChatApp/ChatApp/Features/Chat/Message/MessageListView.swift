@@ -8,17 +8,29 @@
 import SwiftUI
 
 struct MessageListView: View {
-    let messages: [ChatMessage]
+    let messages: [ChatEvent]
     
     var body: some View {
-        ForEach(messages) { message in
-            HStack {
-                if message.isOwn {
-                    Spacer().frame(maxWidth: 32)
-                    MessageRowView(message: message)
-                } else {
-                    MessageRowView(message: message)
-                    Spacer().frame(maxWidth: 32)
+        ForEach(messages) { event in
+            
+            switch event {
+            case .message(let msg):
+                HStack {
+                    if msg.isOwn {
+                        Spacer().frame(maxWidth: 32)
+                        MessageRowView(message: msg)
+                    } else {
+                        MessageRowView(message: msg)
+                        Spacer().frame(maxWidth: 32)
+                    }
+                }
+            
+            case .nicknameChanged(let evt):
+                HStack {
+                    Spacer()
+                    Text("User changed nickname from **\(evt.oldNickname)** to **\(evt.newNickname)**")
+                        .font(.caption)
+                    Spacer()
                 }
             }
             
@@ -28,7 +40,9 @@ struct MessageListView: View {
 
 #Preview {
     MessageListView(messages: [
-        makeChatMessage(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false),
-        makeChatMessage(nickname: "me", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true)
+        .message(makeChatMessage(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false)),
+        .message(makeChatMessage(nickname: "john", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true)),
+        .nicknameChanged(NicknameChangedEvent(oldNickname: "john", newNickname: "j.doe")),
+        .message(makeChatMessage(nickname: "j.doe", body: "I'm testing change of nickname", isOwn: true)),
     ])
 }

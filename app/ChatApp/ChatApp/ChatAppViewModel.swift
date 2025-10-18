@@ -11,15 +11,21 @@ import SwiftUI
 @Observable
 final class ChatAppViewModel: ObservableObject {
     var nickname: String = UserDefaults.standard.string(forKey: "nickname") ?? ""
-    var messages: [ChatMessage] = []
+    var messages: [ChatEvent] = []
 
     func sendMessage(_ text: String) {
-        messages.append(makeChatMessage(nickname: nickname, body: text, isOwn: true))
+        messages.append(.message(makeChatMessage(nickname: nickname, body: text, isOwn: true)))
         // TODO: Send to API
     }
     
     func setNickname(_ newNickname: String) {
+        if newNickname == nickname {
+            return
+        }
+ 
+        messages.append(.nicknameChanged(NicknameChangedEvent(oldNickname: nickname, newNickname: newNickname)))
         nickname = newNickname
+        
         UserDefaults.standard.set(nickname, forKey: "nickname")
     }
     
@@ -33,7 +39,7 @@ final class ChatAppViewModel: ObservableObject {
             makeChatMessage(nickname: "alice", body: "Does it support HTML markdown?", isOwn: false),
             makeChatMessage(nickname: "johndoe", body: "Sure, <i>this is italic</i> and <b>this is bold</b>!", isOwn: true),
         ]
-        
-        messages.append(contentsOf: loadedHistory)
+
+        messages.append(contentsOf: loadedHistory.map { .message($0) })
     }
 }
