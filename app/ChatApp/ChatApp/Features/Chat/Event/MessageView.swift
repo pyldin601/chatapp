@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct MessageView: View {
-    let message: ChatMessage
+    let event: MessageEvent
     
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(message.nickname).font(.caption)
-                Text(message.body)
+                Text(event.nickname).font(.caption)
+                Text(event.body)
             }
             .padding(8)
         }
@@ -30,7 +30,7 @@ struct MessageView: View {
 
 #Preview {
     VStack {
-        MessageView(message: makeChatMessage(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false))
-        MessageView(message: makeChatMessage(nickname: "me", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true))
+        MessageView(event: makeMessageEvent(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false))
+        MessageView(event: makeMessageEvent(nickname: "me", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true))
     }
 }

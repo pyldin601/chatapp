@@ -7,14 +7,6 @@
 
 import SwiftUI
 
-struct ChatMessage: Identifiable {
-    let id = UUID()
-    let nickname: String;
-    let body: AttributedString;
-    let originalBody: String;
-    let isOwn: Bool
-}
-
 func htmlToAttributed(_ html: String, color: Color = .primary) -> AttributedString {
     // TODO: customize styles
     let wrappedHtml = "<span style=\"font-family: -apple-system; font-size: 16px;\">\(html)</span>"
@@ -36,8 +28,7 @@ func htmlToAttributed(_ html: String, color: Color = .primary) -> AttributedStri
         return AttributedString(nsAttr)
 }
 
-func makeChatMessage(nickname: String, body: String, isOwn: Bool) -> ChatMessage {
+func makeMessageEvent(nickname: String, body: String, isOwn: Bool) -> MessageEvent {
     let str = htmlToAttributed(body)
-    
-    return ChatMessage(nickname: nickname, body: str, originalBody: body, isOwn: isOwn)
+    return MessageEvent(nickname: nickname, body: str, originalBody: body, isOwn: isOwn)
 }

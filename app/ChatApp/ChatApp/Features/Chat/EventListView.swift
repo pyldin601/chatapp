@@ -19,9 +19,9 @@ struct EventListView: View {
 
 #Preview {
     EventListView(messages: [
-        .message(makeChatMessage(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false)),
-        .message(makeChatMessage(nickname: "john", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true)),
-        .nicknameChanged(NicknameChangedEvent(oldNickname: "john", newNickname: "j.doe")),
-        .message(makeChatMessage(nickname: "j.doe", body: "I'm testing change of nickname", isOwn: true)),
+        .message(makeMessageEvent(nickname: "melissa", body: "Hey John 👋 How’s it going?", isOwn: false)),
+        .message(makeMessageEvent(nickname: "john", body: "All good! Making a chat app with SwiftUI 😎", isOwn: true)),
+        .nicknameChange(NicknameChangeEvent(oldNickname: "john", newNickname: "j.doe")),
+        .message(makeMessageEvent(nickname: "j.doe", body: "I'm testing change of nickname", isOwn: true)),
     ])
 }

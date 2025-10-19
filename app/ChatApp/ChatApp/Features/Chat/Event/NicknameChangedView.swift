@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NicknameChangedView: View {
-    let event: NicknameChangedEvent
+    let event: NicknameChangeEvent
     
     var body: some View {
         HStack {
@@ -21,5 +21,5 @@ struct NicknameChangedView: View {
 }
 
 #Preview {
-    NicknameChangedView(event: NicknameChangedEvent(oldNickname: "foo", newNickname: "bar"))
+    NicknameChangedView(event: NicknameChangeEvent(oldNickname: "foo", newNickname: "bar"))
 }

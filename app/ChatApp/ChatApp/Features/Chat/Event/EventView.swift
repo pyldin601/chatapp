@@ -12,18 +12,18 @@ struct EventView: View {
     
     var body: some View {
         switch event {
-        case .message(let msg):
+        case .message(let evt):
             HStack {
-                if msg.isOwn {
+                if evt.isOwn {
                     Spacer().frame(maxWidth: 32)
-                    MessageView(message: msg)
+                    MessageView(event: evt)
                 } else {
-                    MessageView(message: msg)
+                    MessageView(event: evt)
                     Spacer().frame(maxWidth: 32)
                 }
             }
             
-        case .nicknameChanged(let evt):
+        case .nicknameChange(let evt):
             HStack {
                 Spacer()
                 Text("User **\(evt.oldNickname)** changed nickname to **\(evt.newNickname)**")
@@ -36,8 +36,8 @@ struct EventView: View {
 
 #Preview {
     VStack {
-        EventView(event: .message(makeChatMessage(nickname: "foo", body: "Hello 👋", isOwn: true)))
-        EventView(event: .nicknameChanged(NicknameChangedEvent(oldNickname: "foo", newNickname: "bar")))
-        EventView(event: .message(makeChatMessage(nickname: "bar", body: "Hey 👋", isOwn: true)))
+        EventView(event: .message(makeMessageEvent(nickname: "foo", body: "Hello 👋", isOwn: true)))
+        EventView(event: .nicknameChange(NicknameChangeEvent(oldNickname: "foo", newNickname: "bar")))
+        EventView(event: .message(makeMessageEvent(nickname: "bar", body: "Hey 👋", isOwn: true)))
     }
 }
