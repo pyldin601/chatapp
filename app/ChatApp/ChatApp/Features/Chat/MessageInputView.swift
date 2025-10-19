@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MessageInputView: View {
+    private let panelRadius: CGFloat = 18
+    private let fieldRadius: CGFloat = 14
+    
     let onSend: (String) -> Void
     
     @State private var draft: String = ""
@@ -15,13 +18,22 @@ struct MessageInputView: View {
     var body: some View {
         HStack {
             TextField("Type a message", text: $draft)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .textFieldStyle(.plain)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
+                        .strokeBorder(.separator, lineWidth: 1)
+                )
             
             Spacer()
             
             Button("Send", systemImage: "paperplane", action: onSendButtonClick)
                 .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
+        .padding(8)
+        .containerShape(RoundedRectangle(cornerRadius: panelRadius, style: .continuous))
     }
     
     func onSendButtonClick() {

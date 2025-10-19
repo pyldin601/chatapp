@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LoginView: View {
+    private let fieldRadius: CGFloat = 14
+    
     @ObservedObject var vm: ChatAppViewModel
     @State var nickname: String
     
@@ -17,7 +19,7 @@ struct LoginView: View {
         VStack(spacing: 24) {
             
             Spacer()
-
+            
             Image("LoginIcon")
                 .resizable()
                 .scaledToFit()
@@ -27,13 +29,19 @@ struct LoginView: View {
             
             
             TextField("Type a nickname", text: $nickname)
-                .textFieldStyle(.roundedBorder)
+                .textFieldStyle(.plain)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
+                        .strokeBorder(.separator, lineWidth: 1)
+                )
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
-                .frame(maxWidth: .infinity)
-
+            
             Spacer()
-
+            
             Button("Enter") {
                 vm.setNickname(nickname)
                 onLogin()

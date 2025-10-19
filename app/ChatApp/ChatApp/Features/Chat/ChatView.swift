@@ -9,18 +9,21 @@ import SwiftUI
 
 struct ChatView: View {
     @ObservedObject var vm: ChatAppViewModel
-
+    
     var messagesView: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 10) {
                     EventListView(messages: vm.messages)
+                    Spacer(minLength: 40)
                 }
             }
             .background(Color(UIColor.systemBackground))
             .padding(.vertical)
             .onChange(of: vm.messages.count) {
-                scrollToLastMessage(proxy: proxy)
+                withAnimation() {
+                    scrollToLastMessage(proxy: proxy)
+                }
             }
             .onAppear() {
                 scrollToLastMessage(proxy: proxy)
@@ -29,18 +32,20 @@ struct ChatView: View {
     }
     
     var body: some View {
-        VStack {
+        ZStack {
             messagesView
-            MessageInputView { msg in vm.sendMessage(msg) }
+            VStack {
+                Spacer()
+                MessageInputView { msg in vm.sendMessage(msg) }
+            }
+            
         }
         .padding()
     }
     
     func scrollToLastMessage(proxy: ScrollViewProxy) {
-        withAnimation(.spring()) {
-            if let last = vm.messages.last {
-                proxy.scrollTo(last.id, anchor: .top)
-            }
+        if let last = vm.messages.last {
+            proxy.scrollTo(last.id, anchor: .top)
         }
     }
 }
