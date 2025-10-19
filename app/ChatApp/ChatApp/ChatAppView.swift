@@ -30,6 +30,7 @@ struct ChatAppView: View {
                 switch route {
                 case .chat:
                     ChatView(vm: vm)
+                        .toolbarBackground(.visible)
                         .ignoresSafeArea()
                 }
             }
