@@ -32,8 +32,8 @@ struct MessageInputView: View {
             Button("Send", systemImage: "paperplane", action: onSendButtonClick)
                 .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        .padding(8)
-        .containerShape(RoundedRectangle(cornerRadius: panelRadius, style: .continuous))
+        .padding(4)
+        .glassEffect(.regular, in: .rect(cornerRadius: panelRadius))
     }
     
     func onSendButtonClick() {

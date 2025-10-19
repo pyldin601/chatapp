@@ -25,7 +25,7 @@ struct ChatAppView: View {
                 path.append(Route.chat)
             }
             .padding()
-            .navigationTitle("Enter")
+            .navigationTitle("ChatApp")
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .chat:
