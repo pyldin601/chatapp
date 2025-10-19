@@ -31,7 +31,7 @@ struct ChatView: View {
     var body: some View {
         VStack {
             messagesView
-            MessageInputView { vm.sendMessage($0) }
+            MessageInputView { msg in vm.sendMessage(msg) }
         }
         .padding()
     }

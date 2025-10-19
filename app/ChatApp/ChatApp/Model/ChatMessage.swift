@@ -11,6 +11,7 @@ struct ChatMessage: Identifiable {
     let id = UUID()
     let nickname: String;
     let body: AttributedString;
+    let originalBody: String;
     let isOwn: Bool
 }
 
@@ -38,5 +39,5 @@ func htmlToAttributed(_ html: String, color: Color = .primary) -> AttributedStri
 func makeChatMessage(nickname: String, body: String, isOwn: Bool) -> ChatMessage {
     let str = htmlToAttributed(body)
     
-    return ChatMessage(nickname: nickname, body: str, isOwn: isOwn)
+    return ChatMessage(nickname: nickname, body: str, originalBody: body, isOwn: isOwn)
 }
