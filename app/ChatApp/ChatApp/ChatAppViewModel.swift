@@ -33,12 +33,12 @@ enum Event: Codable {
     private enum CodingKeys: String, CodingKey {
         case eventType
     }
-
+    
     enum EventType: String, Codable {
         case message
         case nicknameChange
     }
-
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(EventType.self, forKey: .eventType)
@@ -49,7 +49,7 @@ enum Event: Codable {
             self = .nicknameChange(try NicknameChangeEvent(from: decoder))
         }
     }
-
+    
     func encode(to encoder: Encoder) throws {
         switch self {
         case .message(let event):
@@ -69,6 +69,8 @@ final class ChatAppViewModel: ObservableObject {
     var nickname: String = UserDefaults.standard.string(forKey: "nickname") ?? ""
     var messages: [ChatEvent] = []
     
+    private let chatEventRepository: ChatEventRepository = FirebaseChatEventRepositoryImpl()
+    
     private let db = Firestore.firestore()
     private var events: CollectionReference { db.collection("chat-events") }
     private var meta: CollectionReference { db.collection("chat-metadata") }
@@ -77,43 +79,31 @@ final class ChatAppViewModel: ObservableObject {
     
     private func sendEvent(_ event: ChatEvent) async {
         do {
-            let chatMetadataRef = db.collection("chat-metadata").document("chat-metadata")
-            let newChatEventRef = db.collection("chat-events").document()
             
-            let _ = try await db.runTransaction { (tx, _) in
-                do {
-                    let chatMetadataSnap = try tx.getDocument(chatMetadataRef)
-                    let lastSequence = (chatMetadataSnap.data()?["lastSequence"] as? Int) ?? 0
-                    let nextSequence = lastSequence + 1
-                    tx.updateData(["lastSequence": nextSequence], forDocument: chatMetadataRef)
-                    
-                    switch event {
-                    case .message(let msg):
-                        tx.setData([
-                            "eventType": "message",
-                            "nickname": msg.nickname,
-                            "text": msg.originalBody,
-                            "createdAt": Timestamp(date: Date()),
-                            "sequence": nextSequence,
-                            "id": msg.id.uuidString,
-                        ], forDocument: newChatEventRef)
-                    case .nicknameChanged(let evt):
-                        tx.setData([
-                            "eventType": "nicknameChange",
-                            "oldNickname": evt.oldNickname,
-                            "newNickname": evt.newNickname,
-                            "createdAt": Timestamp(date: Date()),
-                            "sequence": nextSequence,
-                            "id": evt.id.uuidString
-                        ], forDocument: newChatEventRef)
-                    }
-                } catch {
-                    // TODO: Handle error inside transaction
-                }
+            let eventDto: ChatEventDTO = switch event {
+            case .message(let msg):
+                    .message(MessageEventDTO(
+                        id: msg.id.uuidString,
+                        sequence: nil,
+                        nickname: msg.nickname,
+                        text: msg.originalBody,
+                        createdAt: Date(),
+                    ))
                 
-                return
+            case .nicknameChanged(let evt):
+                    .nicknameChange(NicknameChangeEventDTO(
+                        id: evt.id.uuidString,
+                        sequence: nil,
+                        oldNickname: evt.oldNickname,
+                        newNickname: evt.newNickname,
+                        createdAt: Date(),
+                    ))
             }
+            
+            try await self.chatEventRepository.publish(eventDto)
+            
         } catch {
+            print("Error:", error.localizedDescription)
             // TODO: Handle error after transaction
         }
     }
@@ -144,7 +134,7 @@ final class ChatAppViewModel: ObservableObject {
             await sendEvent(event)
         }
     }
-
+    
     func subscribe() async {
         streamTask?.cancel()
         streamTask = Task {
@@ -175,7 +165,7 @@ final class ChatAppViewModel: ObservableObject {
                             let chatEvent: ChatEvent = .nicknameChanged(NicknameChangedEvent(oldNickname: evt.oldNickname, newNickname: evt.newNickname))
                             self.messages.append(chatEvent)
                         }
-
+                        
                         print("New document: \(doc)")
                     } catch {
                         print("Error: \(error)")
