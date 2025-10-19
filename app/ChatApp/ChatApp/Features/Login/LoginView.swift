@@ -18,28 +18,32 @@ struct LoginView: View {
     var body: some View {
         VStack(spacing: 24) {
             
-            Spacer()
-            
-            Image("LoginIcon")
-                .resizable()
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 18))
-                .frame(width: 128, height: 128)
-                .padding(.bottom, 8)
-            
-            
-            TextField("Type a nickname", text: $nickname)
-                .textFieldStyle(.plain)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
-                        .strokeBorder(.separator, lineWidth: 1)
-                )
-                .textInputAutocapitalization(.never)
-                .disableAutocorrection(true)
-            
+            VStack {
+                Spacer()
+                Image("LoginIcon")
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                    .frame(width: 128, height: 128)
+                    .padding(.bottom, 8)
+ 
+                Spacer()
+
+                TextField("Type a nickname", text: $nickname)
+                    .textFieldStyle(.plain)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
+                            .strokeBorder(.separator, lineWidth: 1)
+                    )
+                    .textInputAutocapitalization(.never)
+                    .disableAutocorrection(true)
+ 
+                Spacer()
+            }
+
             Spacer()
             
             Button("Enter") {
