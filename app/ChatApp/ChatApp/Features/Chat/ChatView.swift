@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let BOTTOM_ELEMENT_ID = "BOTTOM"
+
 struct ChatView: View {
     @ObservedObject var vm: ChatAppViewModel
     
@@ -15,18 +17,21 @@ struct ChatView: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 10) {
                     EventListView(messages: vm.messages)
-                    Spacer(minLength: 40)
+                    Spacer(minLength: 32)
+                    Color.clear
+                        .frame(height: 1)
+                        .id(BOTTOM_ELEMENT_ID)
                 }
             }
             .background(Color(UIColor.systemBackground))
             .padding(.vertical)
             .onChange(of: vm.messages.count) {
                 withAnimation() {
-                    scrollToLastMessage(proxy: proxy)
+                    scrollToBottom(proxy: proxy)
                 }
             }
             .onAppear() {
-                scrollToLastMessage(proxy: proxy)
+                scrollToBottom(proxy: proxy)
             }
         }
     }
@@ -43,10 +48,12 @@ struct ChatView: View {
         .padding()
     }
     
-    func scrollToLastMessage(proxy: ScrollViewProxy) {
-        if let last = vm.messages.last {
-            proxy.scrollTo(last.id, anchor: .top)
-        }
+    func scrollToBottom(proxy: ScrollViewProxy) {
+        proxy.scrollTo(BOTTOM_ELEMENT_ID, anchor: .top)
+    }
+    
+    func scrollToMessage(proxy: ScrollViewProxy, id: String) {
+        proxy.scrollTo(id, anchor: .top)
     }
 }
 

@@ -29,7 +29,8 @@ struct ChatAppView: View {
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .chat:
-                    ChatView(vm: vm).navigationTitle("Chat")
+                    ChatView(vm: vm)
+                        .ignoresSafeArea()
                 }
             }
         }
