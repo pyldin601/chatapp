@@ -33,7 +33,12 @@ struct ChatAppView: View {
                 }
             }
         }
-        .task { await vm.loadHistory() }
+        .onAppear {
+            Task { await vm.subscribe() }
+        }
+        .onDisappear {
+            Task { await vm.unsubscribe() }
+        }
     }
 }
 
