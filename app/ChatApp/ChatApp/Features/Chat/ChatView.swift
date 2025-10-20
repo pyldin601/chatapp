@@ -12,40 +12,39 @@ let BOTTOM_ELEMENT_ID = "BOTTOM"
 struct ChatView: View {
     @ObservedObject var vm: ChatAppViewModel
     
-    var messagesView: some View {
+    var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 10) {
+                LazyVStack(alignment: .leading) {
                     EventListView(messages: vm.messages)
-                    Spacer(minLength: 32)
+                    
                     Color.clear
                         .frame(height: 1)
                         .id(BOTTOM_ELEMENT_ID)
                 }
+                .padding(.horizontal)
             }
             .background(Color(UIColor.systemBackground))
-            .padding(.vertical)
+            .scrollDismissesKeyboard(.interactively)
+            .safeAreaInset(edge: .bottom) {
+                MessageInputView { vm.sendMessage($0) }
+                    .padding(.horizontal)
+                    .padding(.bottom, 20)
+                    .background(.clear)
+            }
             .onChange(of: vm.messages.count) {
-                withAnimation() {
-                    scrollToBottom(proxy: proxy)
+                DispatchQueue.main.async {
+                    withAnimation() {
+                        scrollToBottom(proxy: proxy)
+                    }
                 }
             }
             .onAppear() {
-                scrollToBottom(proxy: proxy)
+                DispatchQueue.main.async {
+                    scrollToBottom(proxy: proxy)
+                }
             }
         }
-    }
-    
-    var body: some View {
-        ZStack {
-            messagesView
-            VStack {
-                Spacer()
-                MessageInputView { msg in vm.sendMessage(msg) }
-            }
-            
-        }
-        .padding()
     }
     
     func scrollToBottom(proxy: ScrollViewProxy) {

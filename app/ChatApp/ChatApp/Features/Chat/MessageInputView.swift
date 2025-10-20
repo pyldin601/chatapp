@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct MessageInputView: View {
-    private let panelRadius: CGFloat = 18
-    private let fieldRadius: CGFloat = 14
+    private let fieldRadius: CGFloat = 20
     
     let onSend: (String) -> Void
     
@@ -19,8 +18,8 @@ struct MessageInputView: View {
         HStack {
             TextField("Type a message", text: $draft)
                 .textFieldStyle(.plain)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
+                .frame(height: 40)
+                .padding(.horizontal, 18)
                 .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
@@ -29,11 +28,20 @@ struct MessageInputView: View {
             
             Spacer()
             
-            Button("Send", systemImage: "paperplane", action: onSendButtonClick)
-                .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            Button {
+                onSendButtonClick()
+            } label: {
+                Image(systemName: "paperplane")
+            }
+            .frame(width: 40, height: 40)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
+                    .strokeBorder(.separator, lineWidth: 1)
+            )
+            .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        .padding(4)
-        .glassEffect(.regular, in: .rect(cornerRadius: panelRadius))
+        .background(Color.clear)
     }
     
     func onSendButtonClick() {

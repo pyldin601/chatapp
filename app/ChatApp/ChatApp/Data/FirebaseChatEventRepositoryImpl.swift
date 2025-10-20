@@ -33,7 +33,7 @@ final class FirebaseChatEventRepositoryImpl: ChatEventRepository {
                 let nextSequence = lastSequence + 1
                 tx.updateData(["lastSequence": nextSequence], forDocument: chatMetadataRef)
                 
-                var event = event.setSequence(nextSequence)
+                let event = event.setSequence(nextSequence)
                 
                 try tx.setData(from: event, forDocument: newChatEventDoc)
                 

@@ -31,7 +31,7 @@ struct ChatAppView: View {
                 case .chat:
                     ChatView(vm: vm)
                         .toolbarBackground(.visible)
-                        .ignoresSafeArea()
+                        .ignoresSafeArea(.container)
                 }
             }
         }
