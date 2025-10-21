@@ -28,9 +28,9 @@ struct MessageView: View {
         .glassEffect(
             .regular.tint(
                 (event.isOwn
-                 ? Color(red: 64/255, green: 144/255, blue: 255/255)
-                 : Color(red: 255/255, green: 95/255, blue: 109/255))
-                .opacity(colorScheme == .dark ? 0.55 : 0.75),
+                 ? Color(red: 48/255, green: 85/255, blue: 133/255).opacity(0.75)
+                 : Color.gray.opacity(0.15)
+                ),
             ),
             in: .rect(cornerRadius: 16.0)
         )
