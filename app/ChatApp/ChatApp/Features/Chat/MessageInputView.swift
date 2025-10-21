@@ -16,32 +16,35 @@ struct MessageInputView: View {
     
     var body: some View {
         HStack {
-            TextField("Type a message", text: $draft)
-                .textFieldStyle(.plain)
-                .frame(height: 40)
-                .padding(.horizontal, 18)
+            HStack {
+                TextField("Type a message", text: $draft)
+                    .textFieldStyle(.plain)
+                    .frame(height: 40)
+                    .padding(.horizontal, 18)
+                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
+                            .strokeBorder(.separator, lineWidth: 1)
+                    )
+                
+                Spacer()
+                
+                Button {
+                    onSendButtonClick()
+                } label: {
+                    Image(systemName: "paperplane")
+                }
+                .frame(width: 40, height: 40)
                 .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
                         .strokeBorder(.separator, lineWidth: 1)
                 )
-            
-            Spacer()
-            
-            Button {
-                onSendButtonClick()
-            } label: {
-                Image(systemName: "paperplane")
+                .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .frame(width: 40, height: 40)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
-                    .strokeBorder(.separator, lineWidth: 1)
-            )
-            .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .padding(8)
+            .glassEffect()
         }
-        .background(Color.clear)
     }
     
     func onSendButtonClick() {

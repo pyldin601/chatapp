@@ -28,8 +28,8 @@ struct ChatView: View {
             .scrollDismissesKeyboard(.interactively)
             .safeAreaInset(edge: .bottom) {
                 MessageInputView { vm.sendMessage($0) }
-                    .padding(.horizontal)
-                    .padding(.bottom, 20)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 40)
                     .background(.clear)
             }
             .onChange(of: vm.messages.count) {
@@ -58,4 +58,5 @@ struct ChatView: View {
 
 #Preview {
     ChatView(vm: ChatAppViewModel())
+        .ignoresSafeArea()
 }
