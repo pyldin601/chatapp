@@ -44,6 +44,13 @@ struct ChatView: View {
                     scrollToBottom(proxy: proxy)
                 }
             }
+            .onReceive(NotificationCenter.default.publisher(
+                for: UIResponder.keyboardWillChangeFrameNotification
+            )) { _ in
+                withAnimation() {
+                    scrollToBottom(proxy: proxy)
+                }
+            }
         }
     }
     
