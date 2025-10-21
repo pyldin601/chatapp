@@ -33,13 +33,9 @@ struct LoginView: View {
                     .textFieldStyle(.plain)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
-                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
-                            .strokeBorder(.separator, lineWidth: 1)
-                    )
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
+                    .glassEffect(in: .rect(cornerRadius: 16.0))
  
                 Spacer()
             }
@@ -52,7 +48,6 @@ struct LoginView: View {
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
-            .frame(maxWidth: .infinity)
             .keyboardShortcut(.defaultAction)
             .disabled(nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }

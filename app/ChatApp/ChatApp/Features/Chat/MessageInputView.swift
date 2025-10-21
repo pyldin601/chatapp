@@ -21,7 +21,7 @@ struct MessageInputView: View {
                     .textFieldStyle(.plain)
                     .frame(height: 40)
                     .padding(.horizontal, 18)
-                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
+                    .background(.ultraThinMaterial.opacity(0.85), in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
                     .overlay(
                         RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
                             .strokeBorder(.separator, lineWidth: 1)
@@ -35,15 +35,15 @@ struct MessageInputView: View {
                     Image(systemName: "paperplane")
                 }
                 .frame(width: 40, height: 40)
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
+                .background(.ultraThinMaterial.opacity(0.85), in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
                         .strokeBorder(.separator, lineWidth: 1)
                 )
                 .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .padding(8)
-            .glassEffect()
+            .padding(16)
+            .glassEffect(.regular.interactive())
         }
     }
     

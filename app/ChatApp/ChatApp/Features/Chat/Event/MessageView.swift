@@ -8,23 +8,33 @@
 import SwiftUI
 
 struct MessageView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     let event: MessageEvent
     
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(event.nickname).font(.caption)
+                Text(event.nickname).font(.caption).opacity(0.65)
                 Text(event.body)
             }
-            .padding(8)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
         }
         .frame(
             maxWidth: .infinity,
             alignment: .leading
         )
-        .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.secondary.opacity(0.12))
+        .glassEffect(
+            .regular.tint(
+                (event.isOwn
+                 ? Color(red: 64/255, green: 144/255, blue: 255/255)
+                 : Color(red: 255/255, green: 95/255, blue: 109/255))
+                .opacity(colorScheme == .dark ? 0.55 : 0.75),
+            ),
+            in: .rect(cornerRadius: 16.0)
         )
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }
 
