@@ -31,11 +31,11 @@ struct LoginView: View {
 
                 TextField("Type a nickname", text: $nickname)
                     .textFieldStyle(.plain)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
+                    .frame(height: 50)
+                    .padding(.horizontal, 18)
+                    .glassEffect()
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
-                    .glassEffect(in: .rect(cornerRadius: 16.0))
  
                 Spacer()
             }
@@ -47,6 +47,7 @@ struct LoginView: View {
                 onLogin()
             }
             .buttonStyle(.borderedProminent)
+            .glassEffect()
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
             .disabled(nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)

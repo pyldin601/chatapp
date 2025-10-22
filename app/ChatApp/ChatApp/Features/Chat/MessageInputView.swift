@@ -19,13 +19,9 @@ struct MessageInputView: View {
             HStack {
                 TextField("Type a message", text: $draft)
                     .textFieldStyle(.plain)
-                    .frame(height: 40)
+                    .frame(height: 50)
                     .padding(.horizontal, 18)
-                    .background(.ultraThinMaterial.opacity(0.85), in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
-                            .strokeBorder(.separator, lineWidth: 1)
-                    )
+                    .glassEffect()
                 
                 Spacer()
                 
@@ -34,16 +30,11 @@ struct MessageInputView: View {
                 } label: {
                     Image(systemName: "paperplane")
                 }
-                .frame(width: 40, height: 40)
-                .background(.ultraThinMaterial.opacity(0.85), in: RoundedRectangle(cornerRadius: fieldRadius, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
-                        .strokeBorder(.separator, lineWidth: 1)
-                )
+                .frame(width: 50, height: 50)
+                .glassEffect()
                 .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .padding(16)
-            .glassEffect(.regular.interactive())
+            .padding()
         }
     }
     
