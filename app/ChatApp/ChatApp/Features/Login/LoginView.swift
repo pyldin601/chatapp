@@ -33,7 +33,7 @@ struct LoginView: View {
                     .textFieldStyle(.plain)
                     .frame(height: 50)
                     .padding(.horizontal, 18)
-                    .glassEffect()
+                    .glassEffect(.regular.interactive())
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
  
@@ -47,7 +47,7 @@ struct LoginView: View {
                 onLogin()
             }
             .buttonStyle(.borderedProminent)
-            .glassEffect()
+            .glassEffect(.regular.interactive())
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
             .disabled(nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)

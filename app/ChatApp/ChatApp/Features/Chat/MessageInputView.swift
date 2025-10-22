@@ -21,7 +21,7 @@ struct MessageInputView: View {
                     .textFieldStyle(.plain)
                     .frame(height: 50)
                     .padding(.horizontal, 18)
-                    .glassEffect()
+                    .glassEffect(.regular.interactive())
                 
                 Spacer()
                 
@@ -31,7 +31,7 @@ struct MessageInputView: View {
                     Image(systemName: "paperplane")
                 }
                 .frame(width: 50, height: 50)
-                .glassEffect()
+                .glassEffect(.regular.interactive())
                 .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
             .padding()

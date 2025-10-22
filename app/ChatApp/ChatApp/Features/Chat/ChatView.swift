@@ -11,7 +11,13 @@ let BOTTOM_ELEMENT_ID = "BOTTOM"
 
 struct Background: View {
     var body: some View {
-        Image("ChatBackground").resizable().scaledToFill().ignoresSafeArea()
+        GeometryReader { geometry in
+            Image("ChatBackground")
+                .resizable()
+                .scaledToFill()
+                .frame(width: geometry.size.width)
+                .edgesIgnoringSafeArea(.all)
+        }
     }
 }
 
