@@ -9,12 +9,19 @@ import SwiftUI
 
 let BOTTOM_ELEMENT_ID = "BOTTOM"
 
+struct Background: View {
+    var body: some View {
+        Image("ChatBackground").resizable().scaledToFill().ignoresSafeArea()
+    }
+}
+
 struct ChatView: View {
     @ObservedObject var vm: ChatAppViewModel
     
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
+                
                 LazyVStack(alignment: .leading) {
                     EventListView(messages: vm.messages)
                     
@@ -23,8 +30,9 @@ struct ChatView: View {
                         .id(BOTTOM_ELEMENT_ID)
                 }
                 .padding(.horizontal)
+                
             }
-            .background(Color(UIColor.systemBackground))
+            .background(Background())
             .scrollDismissesKeyboard(.interactively)
             .safeAreaInset(edge: .bottom) {
                 MessageInputView { vm.sendMessage($0) }
