@@ -23,8 +23,8 @@ struct EventView: View {
         case .message(let evt):
             HStack(alignment: .top) {
                 if evt.isOwn {
-                    Spacer().frame(maxWidth: 68)
-                    MessageView(event: evt)
+                    Spacer()
+                    OwnMessageView(event: evt)
                 } else {
                     Text(acronym(from: evt.nickname))
                         .font(.headline)
@@ -32,7 +32,7 @@ struct EventView: View {
                         .clipShape(Circle())
                         .glassEffect(.regular.tint(Color.gray.opacity(0.2)))
                     MessageView(event: evt)
-                    Spacer().frame(maxWidth: 60)
+                    Spacer()
                 }
             }
             
