@@ -5,9 +5,11 @@
 //  Created by Roman on 25/10/2025.
 //
 
+import Combine
 import Foundation
 
-final class ChatAppViewModel2 {
+@Observable
+final class ChatAppViewModel2: ObservableObject {
     let chatEventRepository: ChatEventRepository
     let chatStore: ChatStore
     let nicknameStore: NicknameStore
@@ -29,6 +31,7 @@ final class ChatAppViewModel2 {
 
         self.chatEventsSubscriberTask = Task {
             for await event in self.chatEventRepository.subscribe() {
+                print(event)
                 self.chatStore.reconcileChatEventDTO(eventDto: event)
             }
 
@@ -46,6 +49,7 @@ final class ChatAppViewModel2 {
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             text: text,
+            direction: .outgoing,
             deliveryStatus: .pending,
             createdAt: Date()
         )
@@ -58,6 +62,10 @@ final class ChatAppViewModel2 {
     func changeNickname(_ nickname: String) {
         let oldNickname = self.nicknameStore.nickname
         let newNickname = nickname
+        
+        guard oldNickname != newNickname && !newNickname.isEmpty else { return }
+
+        self.nicknameStore.setNickname(nickname)
         
         let event = ChatStoreEventChangedNickname(
             id: UUID().uuidString,
@@ -85,7 +93,7 @@ final class ChatAppViewModel2 {
     
     private func sendEvent(_ event: ChatStoreEvent) async {
         self.chatStore.addChatEvent(event: event)
-        
+
         if let eventDTO = event.toDTO() {
             do {
                 try await self.chatEventRepository.publish(eventDTO)

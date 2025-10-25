@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
-import Combine
+import Observation
 
 let NICKNAME_KEY: String = "nickname"
 
-@MainActor
-final class NicknameStore: ObservableObject {
+@Observable
+final class NicknameStore {
 
-    @Published private(set) var nickname: String = UserDefaults.standard.string(forKey: NICKNAME_KEY) ?? ""
+    private(set) var nickname: String = UserDefaults.standard.string(forKey: NICKNAME_KEY) ?? ""
     
     func setNickname(_ nickname: String) {
         self.nickname = nickname

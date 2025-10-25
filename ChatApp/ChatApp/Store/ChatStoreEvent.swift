@@ -14,6 +14,7 @@ struct ChatStoreEventMessage {
     let id: String
     let nickname: String
     let text: String
+    let direction: Direction
     
     var deliveryStatus: DeliveryStatus
     var createdAt: Date

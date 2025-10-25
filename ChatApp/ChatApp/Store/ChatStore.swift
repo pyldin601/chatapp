@@ -5,14 +5,13 @@
 //  Created by Roman on 23/10/2025.
 //
 
-import SwiftUI
-import Combine
+import Observation
 import OrderedCollections
 
-@MainActor
-final class ChatStore: ObservableObject {
+@Observable
+final class ChatStore {
     
-    @Published private(set) var events: OrderedDictionary<String, ChatStoreEvent> = [:]
+    private(set) var events: OrderedDictionary<String, ChatStoreEvent> = [:]
     
     func reconcileChatEventDTO(eventDto: ChatEventDTO) {
         if let index = events.index(forKey: eventDto.id) {

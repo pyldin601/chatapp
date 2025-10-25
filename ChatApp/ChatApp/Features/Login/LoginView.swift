@@ -10,7 +10,7 @@ import SwiftUI
 struct LoginView: View {
     private let fieldRadius: CGFloat = 14
     
-    @ObservedObject var vm: ChatAppViewModel
+    @Bindable var vm: ChatAppViewModel2
     @State var nickname: String
     
     let onLogin: () -> Void
@@ -43,7 +43,7 @@ struct LoginView: View {
             Spacer()
             
             Button("Enter") {
-                vm.setNickname(nickname)
+                vm.changeNickname(nickname)
                 onLogin()
             }
             .buttonStyle(.borderedProminent)
@@ -59,7 +59,17 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(vm: ChatAppViewModel(), nickname: "joe") {
+    let chatEventRepository = FirebaseChatEventRepositoryImpl()
+    let chatStore = ChatStore()
+    let nicknameStore = NicknameStore()
+    
+    let vm = ChatAppViewModel2(
+        chatEventRepository: chatEventRepository,
+        chatStore: chatStore,
+        nicknameStore: nicknameStore
+    )
+
+    LoginView(vm: vm, nickname: "joe") {
         
     }
 }

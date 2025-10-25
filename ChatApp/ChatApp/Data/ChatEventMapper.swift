@@ -13,16 +13,19 @@ extension ChatEventDTO {
                 id: event.id,
                 nickname: event.nickname,
                 text: event.text,
+                direction: .incoming,
                 deliveryStatus: .delivered,
-                createdAt: event.createdAt
+                createdAt: event.createdAt,
+                sequence: event.sequence,
             ))
-            
+
         case .nicknameChange(let event):
             return .changedNickname(ChatStoreEventChangedNickname(
                 id: event.id,
                 oldNickname: event.oldNickname,
                 newNickname: event.newNickname,
-                createdAt: event.createdAt
+                createdAt: event.createdAt,
+                sequence: event.sequence,
             ))
         }
     }
@@ -41,7 +44,7 @@ extension ChatStoreEvent {
                 id: event.id,
                 nickname: event.nickname,
                 text: event.text,
-                createdAt: event.createdAt
+                createdAt: event.createdAt,
             )))
         case .changedNickname(let event):
             return .some(.nicknameChange(NicknameChangeEventDTO(

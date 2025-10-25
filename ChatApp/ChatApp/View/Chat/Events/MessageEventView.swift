@@ -1,0 +1,123 @@
+//
+//  Events:MessageView.swift
+//  ChatApp
+//
+//  Created by Roman on 25/10/2025.
+//
+
+import SwiftUI
+
+
+struct IncomingMessageEventView: View {
+    let event: ChatStoreEventMessage
+    
+    var body: some View {
+        HStack(alignment: .top) {
+            Text(acronym(from: event.nickname))
+                .font(.headline)
+                .frame(width: 48, height: 48)
+                .clipShape(Circle())
+                .glassEffect(.regular.tint(Color.gray.opacity(0.2)))
+            VStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(event.nickname).font(.caption).opacity(0.65)
+                    Text(event.text)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+            }
+            .glassEffect(
+                .regular.tint(
+                    Color.gray.opacity(0.15),
+                ),
+                in: .rect(cornerRadius: 16.0)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            Spacer()
+        }
+    }
+}
+
+struct OutgoingMessageEventView: View {
+    let event: ChatStoreEventMessage
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            VStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(event.text)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+            }
+            .glassEffect(
+                .regular.tint(
+                    Color(red: 48/255, green: 85/255, blue: 133/255).opacity(0.75),
+                ),
+                in: .rect(cornerRadius: 16.0)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+    }
+}
+
+
+struct MessageEventView: View {
+    let event: ChatStoreEventMessage
+    
+    var body: some View {
+        if event.direction == .incoming {
+            IncomingMessageEventView(event: event)
+        } else {
+            OutgoingMessageEventView(event: event)
+        }
+    }
+}
+
+#Preview {
+    VStack {
+        // Incoming
+        MessageEventView(event: ChatStoreEventMessage(
+            id: UUID().uuidString,
+            nickname: "john",
+            text: "Hello, world!\nHello, world!",
+            direction: .incoming,
+            deliveryStatus: .delivered,
+            createdAt: Date()
+        ))
+        // Outgoing
+        MessageEventView(event: ChatStoreEventMessage(
+            id: UUID().uuidString,
+            nickname: "john",
+            text: "Hello, world! - Pending",
+            direction: .outgoing,
+            deliveryStatus: .pending,
+            createdAt: Date()
+        ))
+        MessageEventView(event: ChatStoreEventMessage(
+            id: UUID().uuidString,
+            nickname: "john",
+            text: "Hello, world! - Sent",
+            direction: .outgoing,
+            deliveryStatus: .sent,
+            createdAt: Date()
+        ))
+        MessageEventView(event: ChatStoreEventMessage(
+            id: UUID().uuidString,
+            nickname: "john",
+            text: "Hello, world! - Delivered",
+            direction: .outgoing,
+            deliveryStatus: .delivered,
+            createdAt: Date()
+        ))
+        MessageEventView(event: ChatStoreEventMessage(
+            id: UUID().uuidString,
+            nickname: "john",
+            text: "Hello, world! - Unsent",
+            direction: .outgoing,
+            deliveryStatus: .unsent,
+            createdAt: Date()
+        ))
+    }
+}

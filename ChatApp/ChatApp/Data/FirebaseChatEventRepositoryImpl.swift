@@ -56,7 +56,7 @@ final class FirebaseChatEventRepositoryImpl: ChatEventRepository {
             let query = events
                 .order(by: "sequence", descending: false)
                 .limit(to: 100)
-            
+
             let listener = query.addSnapshotListener { snap, error in
                 if let error {
                     // You may surface an error via another callback if needed

@@ -23,7 +23,17 @@ struct ChatAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ChatAppView(vm: ChatAppViewModel())
+            let chatEventRepository = FirebaseChatEventRepositoryImpl()
+            let chatStore = ChatStore()
+            let nicknameStore = NicknameStore()
+            
+            let vm = ChatAppViewModel2(
+                chatEventRepository: chatEventRepository,
+                chatStore: chatStore,
+                nicknameStore: nicknameStore
+            )
+            
+            ChatAppView(vm: vm)
         }
     }
 }
