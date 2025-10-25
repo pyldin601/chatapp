@@ -8,6 +8,14 @@
 import SwiftUI
 
 
+func acronym(from nickname: String) -> String {
+    guard let first = nickname.first,
+          let last = nickname.last else {
+        return ""
+    }
+    return "\(first)\(last)".uppercased()
+}
+
 struct IncomingMessageEventView: View {
     let event: ChatStoreEventMessage
     

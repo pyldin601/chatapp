@@ -27,7 +27,7 @@ struct ChatAppApp: App {
             let chatStore = ChatStore()
             let nicknameStore = NicknameStore()
             
-            let vm = ChatAppViewModel2(
+            let vm = ChatAppViewModel(
                 chatEventRepository: chatEventRepository,
                 chatStore: chatStore,
                 nicknameStore: nicknameStore

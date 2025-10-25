@@ -10,14 +10,13 @@ import OrderedCollections
 
 @Observable
 final class ChatStore {
-    
     private(set) var events: OrderedDictionary<String, ChatStoreEvent> = [:]
-    
-    func reconcileChatEventDTO(eventDto: ChatEventDTO) {
+
+    func reconcileChatEventDTO(eventDto: ChatEventDTO, ownNickname: String) {
         if let index = events.index(forKey: eventDto.id) {
             eventDto.updateDomain(&events.values[index])
         } else {
-            events[eventDto.id] = eventDto.toDomain()
+            events[eventDto.id] = eventDto.toDomain(ownNickname)
         }
 
         resort()

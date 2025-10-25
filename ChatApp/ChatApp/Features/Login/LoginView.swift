@@ -10,7 +10,7 @@ import SwiftUI
 struct LoginView: View {
     private let fieldRadius: CGFloat = 14
     
-    @Bindable var vm: ChatAppViewModel2
+    @Bindable var vm: ChatAppViewModel
     @State var nickname: String
     
     let onLogin: () -> Void
@@ -63,7 +63,7 @@ struct LoginView: View {
     let chatStore = ChatStore()
     let nicknameStore = NicknameStore()
     
-    let vm = ChatAppViewModel2(
+    let vm = ChatAppViewModel(
         chatEventRepository: chatEventRepository,
         chatStore: chatStore,
         nicknameStore: nicknameStore

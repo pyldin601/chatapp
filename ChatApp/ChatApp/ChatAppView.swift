@@ -14,10 +14,10 @@ enum Route: Hashable {
 }
 
 struct ChatAppView: View {
-    @Bindable private var vm: ChatAppViewModel2
+    @Bindable private var vm: ChatAppViewModel
     @State private var path = NavigationPath()
     
-    init(vm: ChatAppViewModel2) {
+    init(vm: ChatAppViewModel) {
         self.vm = vm
     }
 
@@ -31,7 +31,7 @@ struct ChatAppView: View {
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .chat:
-                    ChatView2(vm: vm)
+                    ChatView(vm: vm)
                         .toolbarBackground(.visible)
                         .ignoresSafeArea(.container)
                 }
@@ -47,7 +47,7 @@ struct ChatAppView: View {
     let chatStore = ChatStore()
     let nicknameStore = NicknameStore()
     
-    let vm = ChatAppViewModel2(
+    let vm = ChatAppViewModel(
         chatEventRepository: chatEventRepository,
         chatStore: chatStore,
         nicknameStore: nicknameStore

@@ -1,82 +1,116 @@
 //
-//  ChatViewModel.swift
+//  ChatAppViewModel2.swift
 //  ChatApp
 //
-//  Created by Roman on 18/10/2025.
+//  Created by Roman on 25/10/2025.
 //
 
 import Combine
-import SwiftUI
-import FirebaseCore
-import FirebaseFirestore
+import Foundation
 
 @Observable
 final class ChatAppViewModel: ObservableObject {
-    var nickname: String = UserDefaults.standard.string(forKey: "nickname") ?? ""
-    var messages: [ChatEvent] = []
+    let chatEventRepository: ChatEventRepository
+    let chatStore: ChatStore
+    let nicknameStore: NicknameStore
     
-    private let chatEventRepository: ChatEventRepository = FirebaseChatEventRepositoryImpl()
-
-    private var streamTask: Task<Void, Never>?
+    var chatEventsSubscriberTask: Task<Void, Never>?
     
-    private func sendEvent(_ event: ChatEvent) async {
-        do {
-            let eventDto: ChatEventDTO = event.toDTO()
-            try await self.chatEventRepository.publish(eventDto)
-        } catch {
-            print("Error:", error.localizedDescription)
-            // TODO: Handle error after transaction
+    init(
+        chatEventRepository: ChatEventRepository,
+        chatStore: ChatStore,
+        nicknameStore: NicknameStore
+    ) {
+        self.chatEventRepository = chatEventRepository
+        self.chatStore = chatStore
+        self.nicknameStore = nicknameStore
+    }
+    
+    func connect() {
+        self.chatEventsSubscriberTask?.cancel()
+        
+        self.chatEventsSubscriberTask = Task {
+            for await event in self.chatEventRepository.subscribe() {
+                self.chatStore.reconcileChatEventDTO(
+                    eventDto: event,
+                    ownNickname: self.nicknameStore.nickname
+                )
+            }
+            
+            // Disconnected because of network error?
+            // Reconnect?
         }
+    }
+    
+    func disconnect() {
+        self.chatEventsSubscriberTask?.cancel()
     }
     
     func sendMessage(_ text: String) {
-        let event: ChatEvent = .message(makeMessageEvent(nickname: nickname, body: text, isOwn: true))
-        
-        // TODO: Optimistic update
-        // messages.append(event)
+        let event = ChatStoreEventMessage(
+            id: UUID().uuidString,
+            nickname: self.nicknameStore.nickname,
+            text: text,
+            direction: .outgoing,
+            deliveryStatus: .pending,
+            createdAt: Date()
+        )
         
         Task {
-            await sendEvent(event)
+            await self.sendEvent(.message(event))
         }
     }
     
-    func setNickname(_ newNickname: String) {
-        if nickname.isEmpty || newNickname.isEmpty || newNickname == nickname {
-            return
-        }
+    func changeNickname(_ nickname: String) {
+        let oldNickname = self.nicknameStore.nickname
+        let newNickname = nickname
         
-        let event: ChatEvent = .nicknameChange(NicknameChangeEvent(oldNickname: nickname, newNickname: newNickname))
+        guard oldNickname != newNickname && !newNickname.isEmpty else { return }
         
-        // TODO: Optimistic update
-        // messages.append(event)
-        nickname = newNickname
+        self.nicknameStore.setNickname(nickname)
         
-        UserDefaults.standard.set(nickname, forKey: "nickname")
+        let event = ChatStoreEventChangedNickname(
+            id: UUID().uuidString,
+            oldNickname: oldNickname,
+            newNickname: newNickname,
+            createdAt: Date()
+        )
         
         Task {
-            await sendEvent(event)
+            await self.sendEvent(.changedNickname(event))
         }
     }
     
-    func subscribe() async {
-        streamTask?.cancel()
-
-        streamTask = Task {
-            for await evt in self.chatEventRepository.subscribe() {
-                switch evt {
-                case .message(let evt):
-                    let chatEvent: ChatEvent = .message(makeMessageEvent(nickname: evt.nickname, body: evt.text, isOwn: evt.nickname == self.nickname))
-                    self.messages.append(chatEvent)
-
-                case .nicknameChange(let evt):
-                    let chatEvent: ChatEvent = .nicknameChange(NicknameChangeEvent(oldNickname: evt.oldNickname, newNickname: evt.newNickname))
-                    self.messages.append(chatEvent)
+    func sendTyping() {
+        let event = ChatStoreEventTypingMessage(
+            id: UUID().uuidString,
+            nickname: self.nicknameStore.nickname,
+            createdAt: Date()
+        )
+        
+        Task {
+            await self.sendEvent(.typingMessage(event))
+        }
+    }
+    
+    private func sendEvent(_ event: ChatStoreEvent) async {
+        self.chatStore.addChatEvent(event: event)
+        
+        if let eventDTO = event.toDTO() {
+            do {
+                try await self.chatEventRepository.publish(eventDTO)
+                self.chatStore.updateChatEvent(id: event.id) {
+                    $0.setSent()
                 }
+            } catch {
+                self.chatStore.updateChatEvent(id: event.id) {
+                    $0.setUnsent()
+                }
+                
+                // TODO: Notify about msg sending error
+                print("Unable to send event: ", error.localizedDescription)
             }
         }
-    }
-
-    func unsubscribe() async {
-        streamTask?.cancel()
+        
     }
 }
