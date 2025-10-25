@@ -10,6 +10,7 @@
 		30A364412EA4EF6500F86603 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 30A364402EA4EF6500F86603 /* FirebaseAnalytics */; };
 		30A364432EA4F6E100F86603 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 30A364422EA4F6E100F86603 /* FirebaseCore */; };
 		30A364452EA4F6E100F86603 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 30A364442EA4F6E100F86603 /* FirebaseFirestore */; };
+		30E67DC52EAD22A000879665 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 30E67DC42EAD22A000879665 /* OrderedCollections */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 			files = (
 				30A364432EA4F6E100F86603 /* FirebaseCore in Frameworks */,
 				30A364412EA4EF6500F86603 /* FirebaseAnalytics in Frameworks */,
+				30E67DC52EAD22A000879665 /* OrderedCollections in Frameworks */,
 				30A364452EA4F6E100F86603 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +79,7 @@
 				30A364402EA4EF6500F86603 /* FirebaseAnalytics */,
 				30A364422EA4F6E100F86603 /* FirebaseCore */,
 				30A364442EA4F6E100F86603 /* FirebaseFirestore */,
+				30E67DC42EAD22A000879665 /* OrderedCollections */,
 			);
 			productName = ChatApp;
 			productReference = 3016B8692EA396FE0060D6EB /* ChatApp.app */;
@@ -108,6 +111,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				30A3643F2EA4EF3100F86603 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				30E67DC32EAD22A000879665 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3016B86A2EA396FE0060D6EB /* Products */;
@@ -357,6 +361,14 @@
 				minimumVersion = 12.4.0;
 			};
 		};
+		30E67DC32EAD22A000879665 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -374,6 +386,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 30A3643F2EA4EF3100F86603 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		30E67DC42EAD22A000879665 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30E67DC32EAD22A000879665 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
