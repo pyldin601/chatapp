@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChatStoreEventMessage {
-    enum DeliveryStatus { case pending, sent, unsent }
+    enum DeliveryStatus { case pending, sent, delivered, unsent }
     enum Direction { case incoming, outgoing }
     
     let id: String
@@ -58,21 +58,15 @@ enum ChatStoreEvent: Identifiable {
         }
     }
     
-    mutating func setCreatedAt(_ newDate: Date) {
+    var sequence: Int? {
         switch self {
-        case .message(var event):
-            event.createdAt = newDate
-            self = .message(event)
-        case .typingMessage(var event):
-            event.createdAt = newDate
-            self = .typingMessage(event)
-        case .changedNickname(var event):
-            event.createdAt = newDate
-            self = .changedNickname(event)
+        case .message(let event): return event.sequence
+        case .typingMessage(let event): return event.sequence
+        case .changedNickname(let event): return event.sequence
         }
     }
     
-    mutating func setSequence(_ newSequence: Int) {
+    mutating func setSequence(_ newSequence: Int?) {
         switch self {
         case .message(var event):
             event.sequence = newSequence
@@ -88,15 +82,23 @@ enum ChatStoreEvent: Identifiable {
     
     mutating func setSent(_ newCreatedAt: Date) {
         guard case .message(var msg) = self else { return }
-
+        
         msg.createdAt = newCreatedAt
         msg.deliveryStatus = .sent
         self = .message(msg)
     }
 
+    mutating func setDelivered(_ newCreatedAt: Date) {
+        guard case .message(var msg) = self else { return }
+        
+        msg.createdAt = newCreatedAt
+        msg.deliveryStatus = .delivered
+        self = .message(msg)
+    }
+
     mutating func setUnsent() {
         guard case .message(var msg) = self else { return }
-
+        
         msg.deliveryStatus = .unsent
         self = .message(msg)
     }

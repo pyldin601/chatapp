@@ -23,9 +23,36 @@ struct NicknameChangeEventDTO: Codable {
     let createdAt: Date
 }
 
-enum ChatEventDTO: Codable {
+enum ChatEventDTO: Codable, Identifiable {
     case message(MessageEventDTO)
     case nicknameChange(NicknameChangeEventDTO)
+    
+    var id: String {
+        switch self {
+        case .message(let e):
+            return e.id
+        case .nicknameChange(let e):
+            return e.id
+        }
+    }
+    
+    var createdAt: Date {
+        switch self {
+        case .message(let e):
+            return e.createdAt
+        case .nicknameChange(let e):
+            return e.createdAt
+        }
+    }
+    
+    var sequence: Int? {
+        switch self {
+        case .message(let e):
+            return e.sequence
+        case .nicknameChange(let e):
+            return e.sequence
+        }
+    }
     
     private enum CodingKeys: String, CodingKey {
         case eventType
