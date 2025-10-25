@@ -7,42 +7,97 @@
 
 import SwiftUI
 
-struct ChatStoreEventIncomingMessage {
+struct ChatStoreEventMessage {
+    enum DeliveryStatus { case pending, sent, unsent }
+    enum Direction { case incoming, outgoing }
+    
     let id: String
     let nickname: String
     let text: String
-    let timestamp: Date
-}
-
-struct ChatStoreEventOutgoingMessage {
-    let id: String
-    let text: String
-    let timestamp: String
+    
+    var deliveryStatus: DeliveryStatus
+    var createdAt: Date
+    var sequence: Int?
 }
 
 struct ChatStoreEventTypingMessage {
     let id: String
     let nickname: String
+    
+    var createdAt: Date
+    var sequence: Int?
 }
 
 struct ChatStoreEventChangedNickname {
     let id: String
     let oldNickname: String
     let newNickname: String
+    
+    var createdAt: Date
+    var sequence: Int?
 }
 
 enum ChatStoreEvent: Identifiable {
-    case incomingMessage(ChatStoreEventIncomingMessage)
-    case outgoingMessage(ChatStoreEventOutgoingMessage)
+    case message(ChatStoreEventMessage)
     case typingMessage(ChatStoreEventTypingMessage)
     case changedNickname(ChatStoreEventChangedNickname)
     
     var id: String {
         switch self {
-        case .incomingMessage(let event): return event.id
-        case .outgoingMessage(let event): return event.id
+        case .message(let event): return event.id
         case .typingMessage(let event): return event.id
         case .changedNickname(let event): return event.id
         }
+    }
+    
+    var createdAt: Date {
+        switch self {
+        case .message(let event): return event.createdAt
+        case .typingMessage(let event): return event.createdAt
+        case .changedNickname(let event): return event.createdAt
+        }
+    }
+    
+    mutating func setCreatedAt(_ newDate: Date) {
+        switch self {
+        case .message(var event):
+            event.createdAt = newDate
+            self = .message(event)
+        case .typingMessage(var event):
+            event.createdAt = newDate
+            self = .typingMessage(event)
+        case .changedNickname(var event):
+            event.createdAt = newDate
+            self = .changedNickname(event)
+        }
+    }
+    
+    mutating func setSequence(_ newSequence: Int) {
+        switch self {
+        case .message(var event):
+            event.sequence = newSequence
+            self = .message(event)
+        case .typingMessage(var event):
+            event.sequence = newSequence
+            self = .typingMessage(event)
+        case .changedNickname(var event):
+            event.sequence = newSequence
+            self = .changedNickname(event)
+        }
+    }
+    
+    mutating func setSent(_ newCreatedAt: Date) {
+        guard case .message(var msg) = self else { return }
+
+        msg.createdAt = newCreatedAt
+        msg.deliveryStatus = .sent
+        self = .message(msg)
+    }
+
+    mutating func setUnsent() {
+        guard case .message(var msg) = self else { return }
+
+        msg.deliveryStatus = .unsent
+        self = .message(msg)
     }
 }
