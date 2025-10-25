@@ -80,10 +80,9 @@ enum ChatStoreEvent: Identifiable {
         }
     }
     
-    mutating func setSent(_ newCreatedAt: Date) {
+    mutating func setSent() {
         guard case .message(var msg) = self else { return }
-        
-        msg.createdAt = newCreatedAt
+
         msg.deliveryStatus = .sent
         self = .message(msg)
     }

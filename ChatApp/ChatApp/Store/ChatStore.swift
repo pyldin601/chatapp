@@ -15,28 +15,25 @@ final class ChatStore: ObservableObject {
     @Published private(set) var events: OrderedDictionary<String, ChatStoreEvent> = [:]
     
     func reconcileChatEventDTO(eventDto: ChatEventDTO) {
-        if var existingEvent = events[eventDto.id] {
-            // Update existing event from event DTO
-            eventDto.updateDomain(&existingEvent)
+        if let index = events.index(forKey: eventDto.id) {
+            eventDto.updateDomain(&events.values[index])
         } else {
-            // Create new event from event DTO
-            let event = eventDto.toDomain()
-            
-            events[event.id] = event
+            events[eventDto.id] = eventDto.toDomain()
         }
 
         resort()
     }
-    
+
     func addChatEvent(event: ChatStoreEvent) {
         events[event.id] = event
     }
-    
+
     func updateChatEvent(id: String, updateFn: (inout ChatStoreEvent) -> Void) {
         guard let index = events.index(forKey: id) else { return }
         updateFn(&events.values[index])
+        resort()
     }
-    
+
     private func resort() {
         events.sort { lhs, rhs in
             switch (lhs.value.sequence, rhs.value.sequence) {
