@@ -26,41 +26,46 @@ struct ChatView: View {
     @Bindable var vm: ChatAppViewModel
     
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                LazyVStack(alignment: .leading) {
-                    ChatEventsView(events: vm.chatStore.events.values)
-                    Color.clear
-                        .frame(height: 1)
-                        .id(BOTTOM_ELEMENT_ID)
-                }
-                .padding(.horizontal)
-                
-            }
-            .background(Background())
-            .scrollDismissesKeyboard(.interactively)
-            .safeAreaInset(edge: .bottom) {
-                MessageInputView { vm.sendMessage($0) }
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 16)
-                    .background(.clear)
-            }
-            .onAppear() {
-                scrollToBottom(proxy: proxy)
-            }
-            .onChange(of: vm.chatStore.events.count) {
-                withAnimation() {
-                    scrollToBottom(proxy: proxy)
-                }
-            }
-            .onReceive(NotificationCenter.default.publisher(
-                for: UIResponder.keyboardWillChangeFrameNotification
-            )) { _ in
-                withAnimation() {
-                    scrollToBottom(proxy: proxy)
+        VStack(spacing: 0) {
+            GeometryReader { geo in
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(alignment: .leading) {
+                            ChatEventsView(events: vm.chatStore.events.values)
+                            Color.clear
+                                .frame(height: 1)
+                                .id(BOTTOM_ELEMENT_ID)
+                        }
+                        .frame(minHeight: geo.size.height, alignment: .bottom)
+                        .padding(.horizontal)
+                    }
+                    .background(Background())
+                    .scrollDismissesKeyboard(.interactively)
+                    .onAppear() {
+                        scrollToBottom(proxy: proxy)
+                    }
+                    .onChange(of: vm.chatStore.events.count) {
+                        withAnimation() {
+                            scrollToBottom(proxy: proxy)
+                        }
+                    }
+                    .onReceive(NotificationCenter.default.publisher(
+                        for: UIResponder.keyboardWillChangeFrameNotification
+                    )) { _ in
+                        withAnimation() {
+                            scrollToBottom(proxy: proxy)
+                        }
+                    }
                 }
             }
         }
+        .safeAreaInset(edge: .bottom) {
+            MessageInputView { vm.sendMessage($0) }
+                .padding(.horizontal, 8)
+                .padding(.bottom, 16)
+                .background(.clear)
+        }
+        
     }
     
     func scrollToBottom(proxy: ScrollViewProxy) {
