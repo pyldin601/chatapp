@@ -29,13 +29,13 @@ struct ChatView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading) {
-                    
                     ChatEventsView(events: vm.chatStore.events.values)
                     Color.clear
                         .frame(height: 1)
                         .id(BOTTOM_ELEMENT_ID)
                 }
                 .padding(.horizontal)
+                
             }
             .background(Background())
             .scrollDismissesKeyboard(.interactively)
@@ -45,15 +45,11 @@ struct ChatView: View {
                     .padding(.bottom, 16)
                     .background(.clear)
             }
-            .onChange(of: vm.chatStore.events.count) {
-                DispatchQueue.main.async {
-                    withAnimation() {
-                        scrollToBottom(proxy: proxy)
-                    }
-                }
-            }
             .onAppear() {
-                DispatchQueue.main.async {
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: vm.chatStore.events.count) {
+                withAnimation() {
                     scrollToBottom(proxy: proxy)
                 }
             }
@@ -66,37 +62,12 @@ struct ChatView: View {
             }
         }
     }
-
+    
     func scrollToBottom(proxy: ScrollViewProxy) {
         proxy.scrollTo(BOTTOM_ELEMENT_ID, anchor: .top)
     }
 }
 
-//#Preview {
-//    ChatView2(events: [
-//        .message(ChatStoreEventMessage(
-//            id: UUID().uuidString,
-//            nickname: "john",
-//            text: "Hello, world!\nHello, world!",
-//            direction: .incoming,
-//            deliveryStatus: .delivered,
-//            createdAt: Date()
-//        )),
-//        .changedNickname(ChatStoreEventChangedNickname(
-//            id: UUID().uuidString,
-//            oldNickname: "foo",
-//            newNickname: "bar",
-//            createdAt: Date()
-//        )),
-//        .message(ChatStoreEventMessage(
-//            id: UUID().uuidString,
-//            nickname: "bar",
-//            text: "Hello, world! - Pending",
-//            direction: .outgoing,
-//            deliveryStatus: .pending,
-//            createdAt: Date()
-//        ))
-//    ]) { text in
-//        print("Sending message...", text)
-//    }.ignoresSafeArea()
-//}
+#Preview {
+    ChatView(vm: createPreviewVM()).ignoresSafeArea()
+}

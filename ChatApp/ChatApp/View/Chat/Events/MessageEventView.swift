@@ -46,18 +46,50 @@ struct IncomingMessageEventView: View {
     }
 }
 
+struct OutgoingMessageStatusView: View {
+    let status: ChatStoreEventMessage.DeliveryStatus
+    
+    var body: some View {
+        Group {
+            switch status {
+            case .pending:
+                Image(systemName: "clock")
+            case .sent:
+                Image(systemName: "checkmark")
+            case .unsent:
+                Image(systemName: "exclamationmark.circle.fill")
+                    .foregroundStyle(.red)
+            case .delivered:
+                ZStack {
+                    Image(systemName: "checkmark")
+                        .offset(x: -2, y: 0)
+                    Image(systemName: "checkmark")
+                        .offset(x: 2, y: 0)
+                }
+                .drawingGroup()
+            }
+        }
+        .frame(width: 10)
+        .font(.caption2.weight(.semibold))
+    }
+}
+
 struct OutgoingMessageEventView: View {
     let event: ChatStoreEventMessage
     
     var body: some View {
         HStack {
             Spacer()
-            VStack {
+            HStack(alignment: .bottom, spacing: 0) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(event.text)
+                    
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
+                OutgoingMessageStatusView(status: event.deliveryStatus)
+                    .padding(.trailing, 8)
+                    .padding(.bottom, 6)
             }
             .glassEffect(
                 .regular.tint(
