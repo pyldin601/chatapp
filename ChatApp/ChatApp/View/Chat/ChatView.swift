@@ -42,7 +42,9 @@ struct ChatView: View {
                     .background(Background())
                     .scrollDismissesKeyboard(.interactively)
                     .onAppear() {
-                        scrollToBottom(proxy: proxy)
+                        DispatchQueue.main.async {
+                            scrollToBottom(proxy: proxy)
+                        }
                     }
                     .onChange(of: vm.chatStore.events.count) {
                         withAnimation() {

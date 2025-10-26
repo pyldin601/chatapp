@@ -25,10 +25,9 @@ struct MessageInputView: View {
                 
                 Spacer()
                 
-                Button {
-                    onSendButtonClick()
-                } label: {
+                Button(action: onSendButtonClick) {
                     Image(systemName: "paperplane")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 .frame(width: 50, height: 50)
                 .glassEffect(.regular.interactive())

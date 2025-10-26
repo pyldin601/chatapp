@@ -57,7 +57,9 @@ final class ChatAppViewModel: ObservableObject {
         )
         
         Task {
+            print("1")
             await self.sendEvent(.message(event))
+            print("2")
         }
     }
     
