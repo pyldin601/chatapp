@@ -7,12 +7,15 @@
 
 import Combine
 import Foundation
+import SwiftUI
 
 @Observable
 final class ChatAppViewModel: ObservableObject {
     let chatEventRepository: ChatEventRepository
     let chatStore: ChatStore
     let nicknameStore: NicknameStore
+    
+    let feedback = UIImpactFeedbackGenerator(style: .light)
     
     var chatEventsSubscriberTask: Task<Void, Never>?
     
@@ -56,10 +59,11 @@ final class ChatAppViewModel: ObservableObject {
             createdAt: Date()
         )
         
+        feedback.impactOccurred()
+        
         Task {
-            print("1")
             await self.sendEvent(.message(event))
-            print("2")
+
         }
     }
     
@@ -103,6 +107,7 @@ final class ChatAppViewModel: ObservableObject {
                 try await self.chatEventRepository.publish(eventDTO)
                 self.chatStore.updateChatEvent(id: event.id) {
                     $0.setSent()
+                    feedback.impactOccurred()
                 }
             } catch {
                 self.chatStore.updateChatEvent(id: event.id) {
