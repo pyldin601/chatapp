@@ -29,6 +29,14 @@ struct ChatStoreEventTypingMessage {
     var sequence: Int?
 }
 
+struct ChatStoreEventStoppedTypingMessage {
+    let id: String
+    let nickname: String
+    
+    var createdAt: Date
+    var sequence: Int?
+}
+
 struct ChatStoreEventChangedNickname {
     let id: String
     let oldNickname: String
@@ -41,12 +49,14 @@ struct ChatStoreEventChangedNickname {
 enum ChatStoreEvent: Identifiable {
     case message(ChatStoreEventMessage)
     case typingMessage(ChatStoreEventTypingMessage)
+    case stoppedTypingMessage(ChatStoreEventStoppedTypingMessage)
     case changedNickname(ChatStoreEventChangedNickname)
     
     var id: String {
         switch self {
         case .message(let event): return event.id
         case .typingMessage(let event): return event.id
+        case .stoppedTypingMessage(let event): return event.id
         case .changedNickname(let event): return event.id
         }
     }
@@ -55,6 +65,7 @@ enum ChatStoreEvent: Identifiable {
         switch self {
         case .message(let event): return event.createdAt
         case .typingMessage(let event): return event.createdAt
+        case .stoppedTypingMessage(let event): return event.createdAt
         case .changedNickname(let event): return event.createdAt
         }
     }
@@ -63,6 +74,7 @@ enum ChatStoreEvent: Identifiable {
         switch self {
         case .message(let event): return event.sequence
         case .typingMessage(let event): return event.sequence
+        case .stoppedTypingMessage(let event): return event.sequence
         case .changedNickname(let event): return event.sequence
         }
     }
@@ -75,6 +87,9 @@ enum ChatStoreEvent: Identifiable {
         case .typingMessage(var event):
             event.sequence = newSequence
             self = .typingMessage(event)
+        case .stoppedTypingMessage(var event):
+            event.sequence = newSequence
+            self = .stoppedTypingMessage(event)
         case .changedNickname(var event):
             event.sequence = newSequence
             self = .changedNickname(event)
@@ -83,11 +98,11 @@ enum ChatStoreEvent: Identifiable {
     
     mutating func setSent() {
         guard case .message(var msg) = self else { return }
-
+        
         msg.deliveryStatus = .sent
         self = .message(msg)
     }
-
+    
     mutating func setDelivered(_ newCreatedAt: Date) {
         guard case .message(var msg) = self else { return }
         
@@ -95,7 +110,7 @@ enum ChatStoreEvent: Identifiable {
         msg.deliveryStatus = .delivered
         self = .message(msg)
     }
-
+    
     mutating func setUnsent() {
         guard case .message(var msg) = self else { return }
         
