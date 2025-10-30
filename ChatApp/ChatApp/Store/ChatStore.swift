@@ -28,15 +28,4 @@ final class ChatStore {
         guard let index = events.index(forKey: id) else { return }
         updateFn(&events.values[index])
     }
-
-    private func resort() {
-        events.sort { lhs, rhs in
-            switch (lhs.value.sequence, rhs.value.sequence) {
-            case let (x?, y?): return x < y
-            case (nil, nil):   return lhs.value.createdAt < rhs.value.createdAt
-            case (nil, _):     return false
-            case (_, nil):     return true
-            }
-        }
-    }
 }
