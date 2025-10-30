@@ -8,16 +8,20 @@
 import SwiftUI
 
 struct MessageInputView: View {
-    private let fieldRadius: CGFloat = 20
-    
     let onSend: (String) -> Void
+    let onStartTyping: () -> Void
+    let onStopTyping: () -> Void
     
     @State private var draft: String = ""
-    
+    @State private var isTyping: Bool = false
+
     var body: some View {
         HStack {
             HStack {
-                TextField("Type a message", text: $draft)
+                TextField("Type a message", text: Binding(
+                    get: { draft },
+                    set: onChange
+                ))
                     .textFieldStyle(.plain)
                     .frame(height: 50)
                     .padding(.horizontal, 18)
@@ -38,13 +42,35 @@ struct MessageInputView: View {
     }
     
     func onSendButtonClick() {
+        onStopTyping()
+        isTyping = false
+
         onSend(draft)
         draft = ""
+    }
+    
+    func onChange(_ value: String) {
+        if value.isEmpty && isTyping {
+            isTyping = false
+            onStopTyping()
+        } else if !isTyping {
+            isTyping = true
+            onStartTyping()
+        }
+        draft = value
     }
 }
 
 #Preview {
-    MessageInputView { text in
-        print("Message '\(text)' sent")
-    }
+    MessageInputView(
+        onSend: { text in
+            print("Message '\(text)' sent")
+        },
+        onStartTyping: {
+            print("Start typing message")
+        },
+        onStopTyping: {
+            print("Stop typing message")
+        }
+    )
 }

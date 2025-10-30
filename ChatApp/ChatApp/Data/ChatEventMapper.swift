@@ -18,12 +18,25 @@ extension ChatEventDTO {
                     createdAt: event.createdAt,
                     sequence: event.sequence,
                 ))
-            
         case .nicknameChange(let event):
                 .changedNickname(ChatStoreEventChangedNickname(
                     id: event.id,
                     oldNickname: event.oldNickname,
                     newNickname: event.newNickname,
+                    createdAt: event.createdAt,
+                    sequence: event.sequence,
+                ))
+        case .startTyping(let event):
+                .startTypingMessage(ChatStoreEventStartTypingMessage(
+                    id: event.id,
+                    nickname: event.nickname,
+                    createdAt: event.createdAt,
+                    sequence: event.sequence,
+                ))
+        case .stopTyping(let event):
+                .stopTypingMessage(ChatStoreEventStopTypingMessage(
+                    id: event.id,
+                    nickname: event.nickname,
                     createdAt: event.createdAt,
                     sequence: event.sequence,
                 ))
@@ -53,8 +66,18 @@ extension ChatStoreEvent {
                     newNickname: event.newNickname,
                     createdAt: event.createdAt
                 )))
-        default:
-                .none
+        case .startTypingMessage(let event):
+                .some(.startTyping(StartTypingEventDTO(
+                    id: event.id,
+                    nickname: event.nickname,
+                    createdAt: event.createdAt
+                )))
+        case .stopTypingMessage(let event):
+                .some(.stopTyping(StopTypingEventDTO(
+                    id: event.id,
+                    nickname: event.nickname,
+                    createdAt: event.createdAt
+                )))
         }
     }
 }

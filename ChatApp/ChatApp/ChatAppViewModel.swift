@@ -67,6 +67,30 @@ final class ChatAppViewModel: ObservableObject {
         }
     }
     
+    func startTypingMessage() {
+        let event = ChatStoreEventStartTypingMessage(
+            id: UUID().uuidString,
+            nickname: self.nicknameStore.nickname,
+            createdAt: Date()
+        )
+        
+        Task {
+            await self.sendEvent(.startTypingMessage(event))
+        }
+    }
+    
+    func stopTypingMessage() {
+        let event = ChatStoreEventStopTypingMessage(
+            id: UUID().uuidString,
+            nickname: self.nicknameStore.nickname,
+            createdAt: Date()
+        )
+        
+        Task {
+            await self.sendEvent(.stopTypingMessage(event))
+        }
+    }
+    
     func changeNickname(_ nickname: String) {
         let oldNickname = self.nicknameStore.nickname
         let newNickname = nickname
@@ -87,15 +111,27 @@ final class ChatAppViewModel: ObservableObject {
         }
     }
     
-    func sendTyping() {
-        let event = ChatStoreEventTypingMessage(
+    func startTyping() {
+        let event = ChatStoreEventStartTypingMessage(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             createdAt: Date()
         )
         
         Task {
-            await self.sendEvent(.typingMessage(event))
+            await self.sendEvent(.startTypingMessage(event))
+        }
+    }
+    
+    func stopTyping() {
+        let event = ChatStoreEventStopTypingMessage(
+            id: UUID().uuidString,
+            nickname: self.nicknameStore.nickname,
+            createdAt: Date()
+        )
+        
+        Task {
+            await self.sendEvent(.stopTypingMessage(event))
         }
     }
     
