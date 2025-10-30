@@ -18,8 +18,6 @@ final class ChatStore {
         } else {
             events[eventDto.id] = eventDto.toDomain(ownNickname)
         }
-
-        resort()
     }
 
     func addChatEvent(event: ChatStoreEvent) {
@@ -29,7 +27,6 @@ final class ChatStore {
     func updateChatEvent(id: String, updateFn: (inout ChatStoreEvent) -> Void) {
         guard let index = events.index(forKey: id) else { return }
         updateFn(&events.values[index])
-        resort()
     }
 
     private func resort() {
