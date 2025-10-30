@@ -27,14 +27,14 @@ extension ChatEventDTO {
                     sequence: event.sequence,
                 ))
         case .startTyping(let event):
-                .startTypingMessage(ChatStoreEventStartTypingMessage(
+                .startTypingMessage(ChatStoreEventStartTyping(
                     id: event.id,
                     nickname: event.nickname,
                     createdAt: event.createdAt,
                     sequence: event.sequence,
                 ))
         case .stopTyping(let event):
-                .stopTypingMessage(ChatStoreEventStopTypingMessage(
+                .stopTypingMessage(ChatStoreEventStopTyping(
                     id: event.id,
                     nickname: event.nickname,
                     createdAt: event.createdAt,

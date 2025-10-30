@@ -68,7 +68,7 @@ final class ChatAppViewModel: ObservableObject {
     }
     
     func startTypingMessage() {
-        let event = ChatStoreEventStartTypingMessage(
+        let event = ChatStoreEventStartTyping(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             createdAt: Date()
@@ -80,7 +80,7 @@ final class ChatAppViewModel: ObservableObject {
     }
     
     func stopTypingMessage() {
-        let event = ChatStoreEventStopTypingMessage(
+        let event = ChatStoreEventStopTyping(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             createdAt: Date()
@@ -112,7 +112,7 @@ final class ChatAppViewModel: ObservableObject {
     }
     
     func startTyping() {
-        let event = ChatStoreEventStartTypingMessage(
+        let event = ChatStoreEventStartTyping(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             createdAt: Date()
@@ -124,7 +124,7 @@ final class ChatAppViewModel: ObservableObject {
     }
     
     func stopTyping() {
-        let event = ChatStoreEventStopTypingMessage(
+        let event = ChatStoreEventStopTyping(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             createdAt: Date()

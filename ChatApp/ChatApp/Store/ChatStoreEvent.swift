@@ -21,30 +21,6 @@ struct ChatStoreEventMessage {
     var sequence: Int?
 }
 
-struct ChatStoreEventStartTypingMessage {
-    let id: String
-    let nickname: String
-    
-    var createdAt: Date
-    var sequence: Int?
-}
-
-struct ChatStoreEventStopTypingMessage {
-    let id: String
-    let nickname: String
-    
-    var createdAt: Date
-    var sequence: Int?
-}
-
-struct ChatStoreEventStoppedTypingMessage {
-    let id: String
-    let nickname: String
-    
-    var createdAt: Date
-    var sequence: Int?
-}
-
 struct ChatStoreEventChangedNickname {
     let id: String
     let oldNickname: String
@@ -54,11 +30,28 @@ struct ChatStoreEventChangedNickname {
     var sequence: Int?
 }
 
+struct ChatStoreEventStartTyping {
+    let id: String
+    let nickname: String
+    
+    var createdAt: Date
+    var sequence: Int?
+}
+
+struct ChatStoreEventStopTyping {
+    let id: String
+    let nickname: String
+    
+    var createdAt: Date
+    var sequence: Int?
+}
+
 enum ChatStoreEvent: Identifiable {
     case message(ChatStoreEventMessage)
-    case startTypingMessage(ChatStoreEventStartTypingMessage)
-    case stopTypingMessage(ChatStoreEventStopTypingMessage)
     case changedNickname(ChatStoreEventChangedNickname)
+    case startTypingMessage(ChatStoreEventStartTyping)
+    case stopTypingMessage(ChatStoreEventStopTyping)
+
     
     var id: String {
         switch self {
