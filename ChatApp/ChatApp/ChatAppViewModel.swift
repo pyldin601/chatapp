@@ -67,7 +67,7 @@ final class ChatAppViewModel: ObservableObject {
         }
     }
     
-    func startTypingMessage() {
+    func typingMessage() {
         let event = ChatStoreEventStartTyping(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
@@ -76,18 +76,6 @@ final class ChatAppViewModel: ObservableObject {
         
         Task {
             await self.sendEvent(.startTypingMessage(event))
-        }
-    }
-    
-    func stopTypingMessage() {
-        let event = ChatStoreEventStopTyping(
-            id: UUID().uuidString,
-            nickname: self.nicknameStore.nickname,
-            createdAt: Date()
-        )
-        
-        Task {
-            await self.sendEvent(.stopTypingMessage(event))
         }
     }
     
@@ -108,30 +96,6 @@ final class ChatAppViewModel: ObservableObject {
         
         Task {
             await self.sendEvent(.changedNickname(event))
-        }
-    }
-    
-    func startTyping() {
-        let event = ChatStoreEventStartTyping(
-            id: UUID().uuidString,
-            nickname: self.nicknameStore.nickname,
-            createdAt: Date()
-        )
-        
-        Task {
-            await self.sendEvent(.startTypingMessage(event))
-        }
-    }
-    
-    func stopTyping() {
-        let event = ChatStoreEventStopTyping(
-            id: UUID().uuidString,
-            nickname: self.nicknameStore.nickname,
-            createdAt: Date()
-        )
-        
-        Task {
-            await self.sendEvent(.stopTypingMessage(event))
         }
     }
     

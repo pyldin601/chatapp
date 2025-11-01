@@ -33,13 +33,6 @@ extension ChatEventDTO {
                     createdAt: event.createdAt,
                     sequence: event.sequence,
                 ))
-        case .stopTyping(let event):
-                .stopTypingMessage(ChatStoreEventStopTyping(
-                    id: event.id,
-                    nickname: event.nickname,
-                    createdAt: event.createdAt,
-                    sequence: event.sequence,
-                ))
         }
     }
     
@@ -68,12 +61,6 @@ extension ChatStoreEvent {
                 )))
         case .startTypingMessage(let event):
                 .some(.startTyping(StartTypingEventDTO(
-                    id: event.id,
-                    nickname: event.nickname,
-                    createdAt: event.createdAt
-                )))
-        case .stopTypingMessage(let event):
-                .some(.stopTyping(StopTypingEventDTO(
                     id: event.id,
                     nickname: event.nickname,
                     createdAt: event.createdAt

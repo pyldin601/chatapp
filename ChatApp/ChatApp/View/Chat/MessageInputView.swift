@@ -6,26 +6,51 @@
 //
 
 import SwiftUI
+import Combine
+
+final class MessageInputVM: ObservableObject {
+    @Published var draft = ""
+    @Published private(set) var isNotEmpty = false
+    
+    private var bag = Set<AnyCancellable>()
+    
+    var onTyping: (() -> Void)?
+    
+    private var isNonEmpty: (String) -> Bool {
+        { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+    }
+    
+    init() {
+        $draft
+            .map(isNonEmpty)
+            .assign(to: &$isNotEmpty)
+        
+        $draft
+            .removeDuplicates()
+            .throttle(for: .seconds(5), scheduler: DispatchQueue.main, latest: true)
+            .filter(isNonEmpty)
+            .sink { [weak self] _ in self?.onTyping?() }
+            .store(in: &bag)
+    }
+}
 
 struct MessageInputView: View {
     let onSend: (String) -> Void
-    let onStartTyping: () -> Void
-    let onStopTyping: () -> Void
+    let onTyping: () -> Void
     
-    @State private var draft: String = ""
-    @State private var isTyping: Bool = false
-
+    @StateObject private var vm = MessageInputVM()
+    
     var body: some View {
         HStack {
             HStack {
-                TextField("Type a message", text: Binding(
-                    get: { draft },
-                    set: onChange
-                ))
+                TextField("Type a message", text: $vm.draft)
                     .textFieldStyle(.plain)
                     .frame(height: 50)
                     .padding(.horizontal, 18)
                     .glassEffect(.regular.interactive())
+                    .onAppear {
+                        vm.onTyping = onTyping
+                    }
                 
                 Spacer()
                 
@@ -35,42 +60,25 @@ struct MessageInputView: View {
                 }
                 .frame(width: 50, height: 50)
                 .glassEffect(.regular.interactive())
-                .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(!vm.isNotEmpty)
             }
             .padding()
         }
     }
     
-    func onSendButtonClick() {
-        onStopTyping()
-        isTyping = false
-
-        onSend(draft)
-        draft = ""
-    }
-    
-    func onChange(_ value: String) {
-        if value.isEmpty && isTyping {
-            isTyping = false
-            onStopTyping()
-        } else if !isTyping {
-            isTyping = true
-            onStartTyping()
-        }
-        draft = value
+    private func onSendButtonClick() {
+        onSend(vm.draft)
+        vm.draft = ""
     }
 }
 
 #Preview {
     MessageInputView(
         onSend: { text in
-            print("Message '\(text)' sent")
+            print("Sent '\(text)'")
         },
-        onStartTyping: {
-            print("Start typing message")
+        onTyping: {
+            print("Typing message...")
         },
-        onStopTyping: {
-            print("Stop typing message")
-        }
     )
 }

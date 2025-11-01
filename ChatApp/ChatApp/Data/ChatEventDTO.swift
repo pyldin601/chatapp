@@ -30,18 +30,10 @@ struct StartTypingEventDTO: Codable {
     let createdAt: Date
 }
 
-struct StopTypingEventDTO: Codable {
-    let id: String
-    var sequence: Int?
-    let nickname: String
-    let createdAt: Date
-}
-
 enum ChatEventDTO: Codable, Identifiable {
     case message(MessageEventDTO)
     case nicknameChange(NicknameChangeEventDTO)
     case startTyping(StartTypingEventDTO)
-    case stopTyping(StopTypingEventDTO)
     
     var id: String {
         switch self {
@@ -50,8 +42,6 @@ enum ChatEventDTO: Codable, Identifiable {
         case .nicknameChange(let e):
             return e.id
         case .startTyping(let e):
-            return e.id
-        case .stopTyping(let e):
             return e.id
         }
     }
@@ -64,8 +54,6 @@ enum ChatEventDTO: Codable, Identifiable {
             return e.createdAt
         case .startTyping(let e):
             return e.createdAt
-        case .stopTyping(let e):
-            return e.createdAt
         }
     }
     
@@ -76,8 +64,6 @@ enum ChatEventDTO: Codable, Identifiable {
         case .nicknameChange(let e):
             return e.sequence
         case .startTyping(let e):
-            return e.sequence
-        case .stopTyping(let e):
             return e.sequence
         }
     }
@@ -90,7 +76,6 @@ enum ChatEventDTO: Codable, Identifiable {
         case message
         case nicknameChange
         case startTyping
-        case stopTyping
     }
     
     init(from decoder: Decoder) throws {
@@ -103,8 +88,6 @@ enum ChatEventDTO: Codable, Identifiable {
             self = .nicknameChange(try NicknameChangeEventDTO(from: decoder))
         case .startTyping:
             self = .startTyping(try StartTypingEventDTO(from: decoder))
-        case .stopTyping:
-            self = .stopTyping(try StopTypingEventDTO(from: decoder))
         }
     }
     
@@ -122,10 +105,6 @@ enum ChatEventDTO: Codable, Identifiable {
             try event.encode(to: encoder)
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(EventType.startTyping, forKey: .eventType)
-        case .stopTyping(let event):
-            try event.encode(to: encoder)
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(EventType.stopTyping, forKey: .eventType)
         }
     }
     
@@ -140,9 +119,6 @@ enum ChatEventDTO: Codable, Identifiable {
         case .startTyping(var event):
             event.sequence = sequence
             return .startTyping(event)
-        case .stopTyping(var event):
-            event.sequence = sequence
-            return .stopTyping(event)
         }
     }
 }

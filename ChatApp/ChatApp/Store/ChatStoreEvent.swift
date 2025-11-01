@@ -38,26 +38,16 @@ struct ChatStoreEventStartTyping {
     var sequence: Int?
 }
 
-struct ChatStoreEventStopTyping {
-    let id: String
-    let nickname: String
-    
-    var createdAt: Date
-    var sequence: Int?
-}
-
 enum ChatStoreEvent: Identifiable {
     case message(ChatStoreEventMessage)
     case changedNickname(ChatStoreEventChangedNickname)
     case startTypingMessage(ChatStoreEventStartTyping)
-    case stopTypingMessage(ChatStoreEventStopTyping)
 
     
     var id: String {
         switch self {
         case .message(let event): return event.id
         case .startTypingMessage(let event): return event.id
-        case .stopTypingMessage(let event): return event.id
         case .changedNickname(let event): return event.id
         }
     }
@@ -66,7 +56,6 @@ enum ChatStoreEvent: Identifiable {
         switch self {
         case .message(let event): return event.createdAt
         case .startTypingMessage(let event): return event.createdAt
-        case .stopTypingMessage(let event): return event.createdAt
         case .changedNickname(let event): return event.createdAt
         }
     }
@@ -75,7 +64,6 @@ enum ChatStoreEvent: Identifiable {
         switch self {
         case .message(let event): return event.sequence
         case .startTypingMessage(let event): return event.sequence
-        case .stopTypingMessage(let event): return event.sequence
         case .changedNickname(let event): return event.sequence
         }
     }
@@ -88,9 +76,6 @@ enum ChatStoreEvent: Identifiable {
         case .startTypingMessage(var event):
             event.sequence = newSequence
             self = .startTypingMessage(event)
-        case .stopTypingMessage(var event):
-            event.sequence = newSequence
-            self = .stopTypingMessage(event)
         case .changedNickname(var event):
             event.sequence = newSequence
             self = .changedNickname(event)

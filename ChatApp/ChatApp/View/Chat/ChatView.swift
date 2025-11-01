@@ -64,12 +64,11 @@ struct ChatView: View {
         .safeAreaInset(edge: .bottom) {
             MessageInputView(
                 onSend: { vm.sendMessage($0) },
-                onStartTyping: { vm.startTypingMessage() },
-                onStopTyping: { vm.stopTypingMessage() }
+                onTyping: { vm.typingMessage() }
             )
-                .padding(.horizontal, 8)
-                .padding(.bottom, 16)
-                .background(.clear)
+            .padding(.horizontal, 8)
+            .padding(.bottom, 16)
+            .background(.clear)
         }
         
     }
