@@ -10,21 +10,30 @@ import SwiftUI
 struct TypingIndicatorView: View {
     let names: [String]
     
+    @State var visibleNames: [String] = []
+    
     var body: some View {
-        if !names.isEmpty {
+        Group {
             Text(message)
                 .font(.footnote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.gray)
                 .accessibilityLabel(message)
+        }
+        .opacity(names.isEmpty ? 0 : 1)
+        .animation(.easeInOut(duration: 0.3), value: names.isEmpty)
+        .onAppear { visibleNames = names }
+        .onChange(of: names) { _, newNames in
+            guard !newNames.isEmpty else { return }
+            visibleNames = newNames
         }
     }
     
     private var message: String {
-        switch names.count {
-        case 1: return "\(names[0]) is typing…"
-        case 2: return "\(names[0]) and \(names[1]) are typing…"
+        switch visibleNames.count {
+        case 1: return "\(visibleNames[0]) is typing…"
+        case 2: return "\(visibleNames[0]) and \(visibleNames[1]) are typing…"
         default:
-            let firstTwo = names.prefix(2).joined(separator: ", ")
+            let firstTwo = visibleNames.prefix(2).joined(separator: ", ")
             return "\(firstTwo) and others are typing…"
         }
     }

@@ -15,6 +15,7 @@ struct ChangedNicknameEventView: View {
             Spacer()
             Text("User **\(event.oldNickname)** changed nickname to **\(event.newNickname)**")
                 .font(.caption)
+                .foregroundStyle(.gray)
             Spacer()
         }
     }
