@@ -62,11 +62,13 @@ struct LoginView: View {
     let chatEventRepository = FirebaseChatEventRepositoryImpl()
     let chatStore = ChatStore()
     let nicknameStore = NicknameStore()
+    let typingIndicatorStore = TypingIndicatorStore()
     
     let vm = ChatAppViewModel(
         chatEventRepository: chatEventRepository,
         chatStore: chatStore,
-        nicknameStore: nicknameStore
+        nicknameStore: nicknameStore,
+        typingIndicatorStore: typingIndicatorStore
     )
 
     LoginView(vm: vm, nickname: "joe") {

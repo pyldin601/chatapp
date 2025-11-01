@@ -26,11 +26,13 @@ struct ChatAppApp: App {
             let chatEventRepository = FirebaseChatEventRepositoryImpl()
             let chatStore = ChatStore()
             let nicknameStore = NicknameStore()
+            let typingIndicatorStore = TypingIndicatorStore()
             
             let vm = ChatAppViewModel(
                 chatEventRepository: chatEventRepository,
                 chatStore: chatStore,
-                nicknameStore: nicknameStore
+                nicknameStore: nicknameStore,
+                typingIndicatorStore: typingIndicatorStore
             )
             
             ChatAppView(vm: vm)

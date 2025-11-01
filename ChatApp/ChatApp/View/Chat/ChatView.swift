@@ -62,13 +62,18 @@ struct ChatView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            MessageInputView(
-                onSend: { vm.sendMessage($0) },
-                onTyping: { vm.typingMessage() }
-            )
+            VStack(spacing: 0) {
+                TypingIndicatorView(names: vm.typingIndicatorStore.activeNames)
+                    .frame(height: 24)
+                MessageInputView(
+                    onSend: { vm.sendMessage($0) },
+                    onTyping: { vm.typingMessage() }
+                )
+                .background(.clear)
+            }
+            
             .padding(.horizontal, 8)
             .padding(.bottom, 16)
-            .background(.clear)
         }
         
     }

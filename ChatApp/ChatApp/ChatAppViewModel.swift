@@ -14,6 +14,7 @@ final class ChatAppViewModel: ObservableObject {
     let chatEventRepository: ChatEventRepository
     let chatStore: ChatStore
     let nicknameStore: NicknameStore
+    let typingIndicatorStore: TypingIndicatorStore
     
     let feedback = UIImpactFeedbackGenerator(style: .light)
     
@@ -22,11 +23,13 @@ final class ChatAppViewModel: ObservableObject {
     init(
         chatEventRepository: ChatEventRepository,
         chatStore: ChatStore,
-        nicknameStore: NicknameStore
+        nicknameStore: NicknameStore,
+        typingIndicatorStore: TypingIndicatorStore
     ) {
         self.chatEventRepository = chatEventRepository
         self.chatStore = chatStore
         self.nicknameStore = nicknameStore
+        self.typingIndicatorStore = typingIndicatorStore
     }
     
     func connect() {
@@ -38,6 +41,15 @@ final class ChatAppViewModel: ObservableObject {
                     eventDto: event,
                     ownNickname: self.nicknameStore.nickname
                 )
+                
+                if case .message(let evt) = event {
+                    self.typingIndicatorStore.unmarkTyping(nickname:  evt.nickname)
+                }
+                
+                if case .startTyping(let evt) = event {
+                    self.typingIndicatorStore.markTyping(nickname: evt.nickname, eventTime: evt.createdAt)
+                }
+                
             }
             
             // Disconnected because of network error?
@@ -63,7 +75,6 @@ final class ChatAppViewModel: ObservableObject {
         
         Task {
             await self.sendEvent(.message(event))
-
         }
     }
     

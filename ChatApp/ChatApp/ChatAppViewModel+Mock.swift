@@ -93,13 +93,15 @@ func createPreviewVM() -> ChatAppViewModel {
     let chatEventRepository = ChatEventRepositoryMock()
     let chatStore = ChatStore()
     let nicknameStore = NicknameStore()
+    let typingIndicatorStore = TypingIndicatorStore()
     
     createPreviewEvents(chatStore: chatStore)
     
     return ChatAppViewModel(
         chatEventRepository: chatEventRepository,
         chatStore: chatStore,
-        nicknameStore: nicknameStore
+        nicknameStore: nicknameStore,
+        typingIndicatorStore: typingIndicatorStore
     )
 }
 
