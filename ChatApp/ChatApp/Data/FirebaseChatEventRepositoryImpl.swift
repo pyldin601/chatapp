@@ -23,32 +23,22 @@ final class FirebaseChatEventRepositoryImpl: ChatEventRepository {
         let chatMetadataRef = self.meta.document(CHAT_METADATA_DOCUMENT_ID)
         let newChatEventDoc = self.events.document()
         
-        var err: NSError? = nil
-        
-        let _ = try await db.runTransaction { (tx, _) in
+        let _ = try await db.runTransaction { (tx, errorPointer) -> Any? in
             do {
-                
-                let chatMetadataSnap = try tx.getDocument(chatMetadataRef)
-                let lastSequence = (chatMetadataSnap.data()?["lastSequence"] as? Int) ?? 0
-                let nextSequence = lastSequence + 1
-                tx.updateData(["lastSequence": nextSequence], forDocument: chatMetadataRef)
-                
-                let event = event.setSequence(nextSequence)
-                
-                try tx.setData(from: event, forDocument: newChatEventDoc)
-                
-                
+                let snap = try tx.getDocument(chatMetadataRef)
+                let last = (snap.data()?["lastSequence"] as? Int) ?? -1
+                let next = last + 1
+
+                tx.updateData(["lastSequence": next], forDocument: chatMetadataRef)
+
+                let sequenced = event.setSequence(next)
+                try tx.setData(from: sequenced, forDocument: newChatEventDoc)
             } catch {
-                print("err", error.localizedDescription)
-                err = error as NSError
+                errorPointer?.pointee = error as NSError
             }
-            
-            return
+            return nil
         }
-        
-        if let err {
-            throw err
-        }
+
     }
     
     func subscribe() -> AsyncStream<ChatEventDTO> {
