@@ -95,6 +95,8 @@ func createPreviewVM() -> ChatAppViewModel {
     let nicknameStore = NicknameStore()
     let typingIndicatorStore = TypingIndicatorStore()
     
+    typingIndicatorStore.markTyping(nickname: "Roman", eventTime: Date())
+    
     createPreviewEvents(chatStore: chatStore)
     
     return ChatAppViewModel(
