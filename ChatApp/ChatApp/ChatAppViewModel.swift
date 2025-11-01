@@ -46,10 +46,9 @@ final class ChatAppViewModel: ObservableObject {
                     self.typingIndicatorStore.unmarkTyping(nickname:  evt.nickname)
                 }
                 
-                if case .startTyping(let evt) = event {
+                if case let .startTyping(evt) = event, evt.nickname != self.nicknameStore.nickname {
                     self.typingIndicatorStore.markTyping(nickname: evt.nickname, eventTime: evt.createdAt)
                 }
-                
             }
             
             // Disconnected because of network error?
@@ -118,6 +117,8 @@ final class ChatAppViewModel: ObservableObject {
                 try await self.chatEventRepository.publish(eventDTO)
                 self.chatStore.updateChatEvent(id: event.id) {
                     $0.setSent()
+                }
+                if case .message = event {
                     feedback.impactOccurred()
                 }
             } catch {
