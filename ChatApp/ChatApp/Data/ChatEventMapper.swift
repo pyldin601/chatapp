@@ -9,7 +9,7 @@ extension ChatEventDTO {
     func toDomain(_ ownNickname: String) -> ChatStoreEvent {
         switch self {
         case .message(let event):
-                .message(ChatStoreEventMessage(
+                .message(ChatStoreEvent.Message(
                     id: event.id,
                     nickname: event.nickname,
                     text: event.text,
@@ -19,7 +19,7 @@ extension ChatEventDTO {
                     sequence: event.sequence,
                 ))
         case .nicknameChange(let event):
-                .changedNickname(ChatStoreEventChangedNickname(
+                .changedNickname(ChatStoreEvent.NicknameChange(
                     id: event.id,
                     oldNickname: event.oldNickname,
                     newNickname: event.newNickname,
@@ -27,7 +27,7 @@ extension ChatEventDTO {
                     sequence: event.sequence,
                 ))
         case .typing(let event):
-                .startTypingMessage(ChatStoreEventStartTyping(
+                .startTypingMessage(ChatStoreEvent.Typing(
                     id: event.id,
                     nickname: event.nickname,
                     createdAt: event.createdAt,
@@ -46,21 +46,21 @@ extension ChatStoreEvent {
     func toDTO() -> Optional<ChatEventDTO> {
         switch self {
         case .message(let event):
-                .some(.message(MessageEventDTO(
+                .some(.message(ChatEventDTO.Message(
                     id: event.id,
                     nickname: event.nickname,
                     text: event.text,
                     createdAt: event.createdAt,
                 )))
         case .changedNickname(let event):
-                .some(.nicknameChange(NicknameChangeEventDTO(
+                .some(.nicknameChange(ChatEventDTO.NicknameChange(
                     id: event.id,
                     oldNickname: event.oldNickname,
                     newNickname: event.newNickname,
                     createdAt: event.createdAt
                 )))
         case .startTypingMessage(let event):
-                .some(.typing(TypingEventDTO(
+                .some(.typing(ChatEventDTO.Typing(
                     id: event.id,
                     nickname: event.nickname,
                     createdAt: event.createdAt

@@ -17,7 +17,7 @@ func acronym(from nickname: String) -> String {
 }
 
 struct IncomingMessageEventView: View {
-    let event: ChatStoreEventMessage
+    let event: ChatStoreEvent.Message
     
     var body: some View {
         HStack(alignment: .top) {
@@ -47,7 +47,7 @@ struct IncomingMessageEventView: View {
 }
 
 struct OutgoingMessageStatusView: View {
-    let status: ChatStoreEventMessage.DeliveryStatus
+    let status: ChatStoreEvent.Message.DeliveryStatus
     
     var body: some View {
         Group {
@@ -75,7 +75,7 @@ struct OutgoingMessageStatusView: View {
 }
 
 struct OutgoingMessageEventView: View {
-    let event: ChatStoreEventMessage
+    let event: ChatStoreEvent.Message
     
     var body: some View {
         HStack {
@@ -104,7 +104,7 @@ struct OutgoingMessageEventView: View {
 
 
 struct MessageEventView: View {
-    let event: ChatStoreEventMessage
+    let event: ChatStoreEvent.Message
     
     var body: some View {
         if event.direction == .incoming {
@@ -118,7 +118,7 @@ struct MessageEventView: View {
 #Preview {
     VStack {
         // Incoming
-        MessageEventView(event: ChatStoreEventMessage(
+        MessageEventView(event: ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: "john",
             text: "Hello, world!\nHello, world!",
@@ -127,7 +127,7 @@ struct MessageEventView: View {
             createdAt: Date()
         ))
         // Outgoing
-        MessageEventView(event: ChatStoreEventMessage(
+        MessageEventView(event: ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: "john",
             text: "Hello, world! - Pending",
@@ -135,7 +135,7 @@ struct MessageEventView: View {
             deliveryStatus: .pending,
             createdAt: Date()
         ))
-        MessageEventView(event: ChatStoreEventMessage(
+        MessageEventView(event: ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: "john",
             text: "Hello, world! - Sent",
@@ -143,7 +143,7 @@ struct MessageEventView: View {
             deliveryStatus: .sent,
             createdAt: Date()
         ))
-        MessageEventView(event: ChatStoreEventMessage(
+        MessageEventView(event: ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: "john",
             text: "Hello, world! - Delivered",
@@ -151,7 +151,7 @@ struct MessageEventView: View {
             deliveryStatus: .delivered,
             createdAt: Date()
         ))
-        MessageEventView(event: ChatStoreEventMessage(
+        MessageEventView(event: ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: "john",
             text: "Hello, world! - Unsent",

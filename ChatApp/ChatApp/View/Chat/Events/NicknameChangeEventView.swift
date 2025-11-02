@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NicknameChangeEventView: View {
-    let event: ChatStoreEventChangedNickname
+    let event: ChatStoreEvent.NicknameChange
 
     var body: some View {
         HStack {
@@ -22,7 +22,7 @@ struct NicknameChangeEventView: View {
 }
 
 #Preview {
-    NicknameChangeEventView(event: ChatStoreEventChangedNickname(
+    NicknameChangeEventView(event: ChatStoreEvent.NicknameChange(
         id: UUID().uuidString,
         oldNickname: "foo",
         newNickname: "bar",

@@ -7,42 +7,41 @@
 
 import SwiftUI
 
-struct ChatStoreEventMessage {
-    enum DeliveryStatus { case pending, sent, delivered, unsent }
-    enum Direction { case incoming, outgoing }
-    
-    let id: String
-    let nickname: String
-    let text: String
-    let direction: Direction
-    
-    var deliveryStatus: DeliveryStatus
-    var createdAt: Date
-    var sequence: Int?
-}
-
-struct ChatStoreEventChangedNickname {
-    let id: String
-    let oldNickname: String
-    let newNickname: String
-    
-    var createdAt: Date
-    var sequence: Int?
-}
-
-struct ChatStoreEventStartTyping {
-    let id: String
-    let nickname: String
-    
-    var createdAt: Date
-    var sequence: Int?
-}
-
 enum ChatStoreEvent: Identifiable {
-    case message(ChatStoreEventMessage)
-    case changedNickname(ChatStoreEventChangedNickname)
-    case startTypingMessage(ChatStoreEventStartTyping)
+    struct Message {
+        enum DeliveryStatus { case pending, sent, delivered, unsent }
+        enum Direction { case incoming, outgoing }
+        
+        let id: String
+        let nickname: String
+        let text: String
+        let direction: Direction
+        
+        var deliveryStatus: DeliveryStatus
+        var createdAt: Date
+        var sequence: Int?
+    }
+    
+    struct NicknameChange {
+        let id: String
+        let oldNickname: String
+        let newNickname: String
+        
+        var createdAt: Date
+        var sequence: Int?
+    }
 
+    struct Typing {
+        let id: String
+        let nickname: String
+        
+        var createdAt: Date
+        var sequence: Int?
+    }
+
+    case message(Message)
+    case changedNickname(NicknameChange)
+    case startTypingMessage(Typing)
     
     var id: String {
         switch self {

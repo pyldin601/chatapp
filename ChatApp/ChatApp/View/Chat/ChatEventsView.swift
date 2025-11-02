@@ -27,7 +27,7 @@ where Events.Element == ChatStoreEvent {
 
 #Preview {
     ChatEventsView(events: [
-        .message(ChatStoreEventMessage(
+        .message(ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: "john",
             text: "Hello, world!\nHello, world!",
@@ -35,13 +35,13 @@ where Events.Element == ChatStoreEvent {
             deliveryStatus: .delivered,
             createdAt: Date()
         )),
-        .changedNickname(ChatStoreEventChangedNickname(
+        .changedNickname(ChatStoreEvent.NicknameChange(
             id: UUID().uuidString,
             oldNickname: "foo",
             newNickname: "bar",
             createdAt: Date()
         )),
-        .message(ChatStoreEventMessage(
+        .message(ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: "bar",
             text: "Hello, world! - Pending",

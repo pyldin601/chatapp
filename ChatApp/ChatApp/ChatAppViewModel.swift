@@ -61,7 +61,7 @@ final class ChatAppViewModel: ObservableObject {
     }
     
     func sendMessage(_ text: String) {
-        let event = ChatStoreEventMessage(
+        let event = ChatStoreEvent.Message(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             text: text,
@@ -78,7 +78,7 @@ final class ChatAppViewModel: ObservableObject {
     }
     
     func typingMessage() {
-        let event = ChatStoreEventStartTyping(
+        let event = ChatStoreEvent.Typing(
             id: UUID().uuidString,
             nickname: self.nicknameStore.nickname,
             createdAt: Date()
@@ -97,7 +97,7 @@ final class ChatAppViewModel: ObservableObject {
         
         self.nicknameStore.setNickname(nickname)
         
-        let event = ChatStoreEventChangedNickname(
+        let event = ChatStoreEvent.NicknameChange(
             id: UUID().uuidString,
             oldNickname: oldNickname,
             newNickname: newNickname,

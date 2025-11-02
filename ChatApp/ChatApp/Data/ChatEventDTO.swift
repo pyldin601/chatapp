@@ -7,33 +7,34 @@
 
 import SwiftUI
 
-struct MessageEventDTO: Codable {
-    let id: String
-    var sequence: Int?
-    let nickname: String
-    let text: String
-    let createdAt: Date
-}
-
-struct NicknameChangeEventDTO: Codable {
-    let id: String
-    var sequence: Int?
-    let oldNickname: String
-    let newNickname: String
-    let createdAt: Date
-}
-
-struct TypingEventDTO: Codable {
-    let id: String
-    var sequence: Int?
-    let nickname: String
-    let createdAt: Date
-}
-
 enum ChatEventDTO: Codable, Identifiable {
-    case message(MessageEventDTO)
-    case nicknameChange(NicknameChangeEventDTO)
-    case typing(TypingEventDTO)
+    
+    struct Message: Codable {
+        let id: String
+        var sequence: Int?
+        let nickname: String
+        let text: String
+        let createdAt: Date
+    }
+
+    struct NicknameChange: Codable {
+        let id: String
+        var sequence: Int?
+        let oldNickname: String
+        let newNickname: String
+        let createdAt: Date
+    }
+
+    struct Typing: Codable {
+        let id: String
+        var sequence: Int?
+        let nickname: String
+        let createdAt: Date
+    }
+
+    case message(Message)
+    case nicknameChange(NicknameChange)
+    case typing(Typing)
     
     var id: String {
         switch self {
@@ -83,11 +84,11 @@ enum ChatEventDTO: Codable, Identifiable {
         let type = try container.decode(EventType.self, forKey: .eventType)
         switch type {
         case .message:
-            self = .message(try MessageEventDTO(from: decoder))
+            self = .message(try Message(from: decoder))
         case .nicknameChange:
-            self = .nicknameChange(try NicknameChangeEventDTO(from: decoder))
+            self = .nicknameChange(try NicknameChange(from: decoder))
         case .typing:
-            self = .typing(try TypingEventDTO(from: decoder))
+            self = .typing(try Typing(from: decoder))
         }
     }
     
