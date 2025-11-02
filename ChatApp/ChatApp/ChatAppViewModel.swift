@@ -46,7 +46,7 @@ final class ChatAppViewModel: ObservableObject {
                     self.typingIndicatorStore.unmarkTyping(nickname:  evt.nickname)
                 }
                 
-                if case let .startTyping(evt) = event, evt.nickname != self.nicknameStore.nickname {
+                if case let .typing(evt) = event, evt.nickname != self.nicknameStore.nickname {
                     self.typingIndicatorStore.markTyping(nickname: evt.nickname, eventTime: evt.createdAt)
                 }
             }

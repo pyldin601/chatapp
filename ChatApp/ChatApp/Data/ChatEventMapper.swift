@@ -26,7 +26,7 @@ extension ChatEventDTO {
                     createdAt: event.createdAt,
                     sequence: event.sequence,
                 ))
-        case .startTyping(let event):
+        case .typing(let event):
                 .startTypingMessage(ChatStoreEventStartTyping(
                     id: event.id,
                     nickname: event.nickname,
@@ -60,7 +60,7 @@ extension ChatStoreEvent {
                     createdAt: event.createdAt
                 )))
         case .startTypingMessage(let event):
-                .some(.startTyping(StartTypingEventDTO(
+                .some(.typing(TypingEventDTO(
                     id: event.id,
                     nickname: event.nickname,
                     createdAt: event.createdAt

@@ -17,7 +17,7 @@ where Events.Element == ChatStoreEvent {
             case .message(let evt):
                 MessageEventView(event: evt)
             case .changedNickname(let evt):
-                ChangedNicknameEventView(event: evt)
+                NicknameChangeEventView(event: evt)
             default:
                 EmptyView()
             }

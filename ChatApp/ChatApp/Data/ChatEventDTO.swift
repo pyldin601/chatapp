@@ -23,7 +23,7 @@ struct NicknameChangeEventDTO: Codable {
     let createdAt: Date
 }
 
-struct StartTypingEventDTO: Codable {
+struct TypingEventDTO: Codable {
     let id: String
     var sequence: Int?
     let nickname: String
@@ -33,7 +33,7 @@ struct StartTypingEventDTO: Codable {
 enum ChatEventDTO: Codable, Identifiable {
     case message(MessageEventDTO)
     case nicknameChange(NicknameChangeEventDTO)
-    case startTyping(StartTypingEventDTO)
+    case typing(TypingEventDTO)
     
     var id: String {
         switch self {
@@ -41,7 +41,7 @@ enum ChatEventDTO: Codable, Identifiable {
             return e.id
         case .nicknameChange(let e):
             return e.id
-        case .startTyping(let e):
+        case .typing(let e):
             return e.id
         }
     }
@@ -52,7 +52,7 @@ enum ChatEventDTO: Codable, Identifiable {
             return e.createdAt
         case .nicknameChange(let e):
             return e.createdAt
-        case .startTyping(let e):
+        case .typing(let e):
             return e.createdAt
         }
     }
@@ -63,7 +63,7 @@ enum ChatEventDTO: Codable, Identifiable {
             return e.sequence
         case .nicknameChange(let e):
             return e.sequence
-        case .startTyping(let e):
+        case .typing(let e):
             return e.sequence
         }
     }
@@ -75,7 +75,7 @@ enum ChatEventDTO: Codable, Identifiable {
     enum EventType: String, Codable {
         case message
         case nicknameChange
-        case startTyping
+        case typing
     }
     
     init(from decoder: Decoder) throws {
@@ -86,8 +86,8 @@ enum ChatEventDTO: Codable, Identifiable {
             self = .message(try MessageEventDTO(from: decoder))
         case .nicknameChange:
             self = .nicknameChange(try NicknameChangeEventDTO(from: decoder))
-        case .startTyping:
-            self = .startTyping(try StartTypingEventDTO(from: decoder))
+        case .typing:
+            self = .typing(try TypingEventDTO(from: decoder))
         }
     }
     
@@ -101,10 +101,10 @@ enum ChatEventDTO: Codable, Identifiable {
             try event.encode(to: encoder)
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(EventType.nicknameChange, forKey: .eventType)
-        case .startTyping(let event):
+        case .typing(let event):
             try event.encode(to: encoder)
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(EventType.startTyping, forKey: .eventType)
+            try container.encode(EventType.typing, forKey: .eventType)
         }
     }
     
@@ -116,9 +116,9 @@ enum ChatEventDTO: Codable, Identifiable {
         case .nicknameChange(var event):
             event.sequence = sequence
             return .nicknameChange(event)
-        case .startTyping(var event):
+        case .typing(var event):
             event.sequence = sequence
-            return .startTyping(event)
+            return .typing(event)
         }
     }
 }

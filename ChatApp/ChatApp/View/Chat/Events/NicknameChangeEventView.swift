@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ChangedNicknameEventView: View {
+struct NicknameChangeEventView: View {
     let event: ChatStoreEventChangedNickname
 
     var body: some View {
@@ -22,7 +22,7 @@ struct ChangedNicknameEventView: View {
 }
 
 #Preview {
-    ChangedNicknameEventView(event: ChatStoreEventChangedNickname(
+    NicknameChangeEventView(event: ChatStoreEventChangedNickname(
         id: UUID().uuidString,
         oldNickname: "foo",
         newNickname: "bar",
